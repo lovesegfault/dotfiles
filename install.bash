@@ -36,16 +36,10 @@ cp "${__dir}/alacritty.yml" "${HOME}/.config/alacritty/alacritty.yml"
 
 # Set up i3
 sudo pacman -S --needed --noconfirm i3-wm i3blocks i3lock i3status
-workdir=$(mktemp -d)
-git clone --depth=1 https://aur.archlinux.org/i3pystatus.git "${workdir}"
-cd "${workdir}"
-makepkg -csi
-cd "${__dir}"
-rm -r "${workdir}"
-unset workdir
-mkdir -p "${HOME}/.config/i3/"
-cp "${__dir}/i3-config" "${HOME}/.config/i3/config"
-cp "${__dir}/i3pystatus.conf.py" "${HOME}/.config/i3pystatus.conf.py"
+cp "${__dir}/i3.config" "${HOME}/.config/i3/config"
+
+# Set up i3 status
+cp "${__dir}/i3status.config" "${HOME}/.config/i3status/config"
 
 # Set up tmux
 sudo pacman -S --needed --noconfirm tmux
