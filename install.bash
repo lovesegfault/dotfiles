@@ -5,11 +5,12 @@ set -o nounset
 set -o pipefail
 
 __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-__file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
-__base="$(basename ${__file} .sh)"
-__root="$(cd "$(dirname "${__dir}")" && pwd)"
+# __file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
+# __base="$(basename ${__file} .sh)"
+# __root="$(cd "$(dirname "${__dir}")" && pwd)"
 
 sudo pacman -S --needed --noconfirm ccache
+mkdir -p "${HOME}/.config/{alacritty,i3,i3status}"
 
 # Set up fonts
 workdir=$(mktemp -d)
