@@ -9,13 +9,15 @@ __file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
 __base="$(basename ${__file} .sh)"
 __root="$(cd "$(dirname "${__dir}")" && pwd)"
 
+sudo pacman -S --needed --noconfirm ccache
+
 # Set up fonts
 workdir=$(mktemp -d)
 git clone --depth=1 https://aur.archlinux.org/nerd-fonts-complete.git "${workdir}"
 cd "${workdir}"
 makepkg -csi
 cd "${__dir}"
-rm -r "${workdir}"
+rm -rf "${workdir}"
 unset workdir
 
 # Set up vim using amix/vimrc
@@ -31,7 +33,6 @@ sudo pacman -S --needed --noconfirm rustup
 rustup default stable
 export PATH="${PATH}:${HOME}/.cargo/bin" # Rust
 
-sudo pacman -S --needed --noconfirm ccache
 
 # Set up alacritty
 workdir=$(mktemp -d)
@@ -39,7 +40,7 @@ git clone --depth=1 https://aur.archlinux.org/alacritty-git.git "${workdir}"
 cd "${workdir}"
 makepkg -csi
 cd "${__dir}"
-rm -r "${workdir}"
+rm -rf "${workdir}"
 unset workdir
 mkdir -p "${HOME}/.config/alacritty/"
 cp "${__dir}/alacritty.yml" "${HOME}/.config/alacritty/alacritty.yml"
