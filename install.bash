@@ -11,7 +11,7 @@ __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 sudo pacman -Syyu --needed --noconfirm ccache
 # Set up tools
-sudo pacman -S --needed --noconfirm base-devel sudo git  python clang llvm
+sudo pacman -S --needed --noconfirm base-devel htop sudo git  python clang llvm
 
 mkdir -p "${HOME}/.config/{alacritty,i3,i3status}"
 
@@ -57,9 +57,11 @@ cp "${__dir}/alacritty.yml" "${HOME}/.config/alacritty/alacritty.yml"
 
 # Set up i3
 sudo pacman -S --needed --noconfirm i3-wm i3blocks i3lock i3status
+mkdir -p "${HOME}/.config/i3/"
 cp "${__dir}/i3.config" "${HOME}/.config/i3/config"
 
 # Set up i3 status
+mkdir -p "${HOME}/.config/i3status/"
 cp "${__dir}/i3status.config" "${HOME}/.config/i3status/config"
 
 # Set up tmux
