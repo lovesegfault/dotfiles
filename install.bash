@@ -15,7 +15,12 @@ sudo pacman -S --needed --noconfirm base-devel sudo git  python clang llvm
 
 mkdir -p "${HOME}/.config/{alacritty,i3,i3status}"
 
-sudo gpasswd -a "${USER}" sys disk wheel uucp lock storage
+sudo gpasswd -a "${USER}" sys 
+sudo gpasswd -a "${USER}" disk
+sudo gpasswd -a "${USER}" wheel 
+sudo gpasswd -a "${USER}" uucp 
+sudo gpasswd -a "${USER}" lock 
+sudo gpasswd -a "${USER}" storage
 
 # Set up fonts
 workdir=$(mktemp -d)
