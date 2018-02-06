@@ -11,9 +11,9 @@ __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 sudo pacman -Syyu --needed --noconfirm ccache
 # Set up tools
-sudo pacman -S --needed --noconfirm base-devel htop sudo git  python clang llvm
+sudo pacman -S --needed --noconfirm base-devel exa bash-completions htop sudo git  python clang llvm
 
-mkdir -p "${HOME}/.config/{alacritty,i3,i3status}"
+mkdir -p "${HOME}/.config"/{alacritty,i3,i3status}
 
 sudo gpasswd -a "${USER}" sys 
 sudo gpasswd -a "${USER}" disk
@@ -26,14 +26,14 @@ sudo gpasswd -a "${USER}" storage
 workdir=$(mktemp -d)
 git clone --depth=1 https://aur.archlinux.org/nerd-fonts-complete.git "${workdir}"
 cd "${workdir}"
-makepkg -csi
+makepkg -csi --noconfirm
 cd "${__dir}"
 rm -rf "${workdir}"
 unset workdir
 workdir=$(mktemp -d)
 git clone --depth=1 https://aur.archlinux.org/powerline-console-fonts.git "${workdir}"
 cd "${workdir}"
-makepkg -csi
+makepkg -csi --noconfirm
 cd "${__dir}"
 rm -rf "${workdir}"
 unset workdir
@@ -56,7 +56,7 @@ export PATH="${PATH}:${HOME}/.cargo/bin" # Rust
 workdir=$(mktemp -d)
 git clone --depth=1 https://aur.archlinux.org/alacritty-git.git "${workdir}"
 cd "${workdir}"
-makepkg -csi
+makepkg -csi --noconfirm
 cd "${__dir}"
 rm -rf "${workdir}"
 unset workdir
@@ -82,13 +82,13 @@ cp "${__dir}/zshrc" "${HOME}/.zshrc"
 workdir=$(mktemp -d)
 git clone --depth=1 https://aur.archlinux.org/antigen-git.git "${workdir}"
 cd "${workdir}"
-makepkg -csi
+makepkg -csi --noconfirm
 cd "${__dir}"
 rm -rf "${workdir}"
 unset workdir
 
 # Set up folders
-mkdir -p "${HOME}/{src,bin,mnt}"
+mkdir -p "${HOME}"/{src,bin,mnt}
 
 # Set up binaries
 cp -r "${__dir}/bin" "${HOME}/"
