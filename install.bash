@@ -9,7 +9,7 @@ __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # __base="$(basename ${__file} .sh)"
 # __root="$(cd "$(dirname "${__dir}")" && pwd)"
 
-sudo pacman -S --needed --noconfirm ccache
+sudo pacman -Syyu --needed --noconfirm ccache
 mkdir -p "${HOME}/.config/{alacritty,i3,i3status}"
 
 # Set up fonts
@@ -33,7 +33,6 @@ sudo cp "${__dir}/makepkg.conf" /etc/makepkg.conf
 sudo pacman -S --needed --noconfirm rustup
 rustup default stable
 export PATH="${PATH}:${HOME}/.cargo/bin" # Rust
-
 
 # Set up alacritty
 workdir=$(mktemp -d)
@@ -59,7 +58,13 @@ cp "${__dir}/tmux.conf" "${HOME}/.tmux.conf"
 
 # Set up zsh
 sudo pacman -S --needed --noconfirm zsh ruby
-cp "{__dir}/zshrc" "${HOME}/.zshrc"
+cp "${__dir}/zshrc" "${HOME}/.zshrc"
+
+# Set up folders
+mkdir -p "${HOME}/{src,bin,mnt}"
+
+# Set up binaries
+cp -r "${__dir}/bin" "${HOME}/"
 
 # Set up tools
 sudo pacman -S --needed --noconfirm base-devel python clang llvm
