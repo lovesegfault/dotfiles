@@ -10,6 +10,9 @@ __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # __root="$(cd "$(dirname "${__dir}")" && pwd)"
 
 sudo pacman -Syyu --needed --noconfirm ccache
+# Set up tools
+sudo pacman -S --needed --noconfirm base-devel sudo git  python clang llvm
+
 mkdir -p "${HOME}/.config/{alacritty,i3,i3status}"
 
 # Set up fonts
@@ -66,5 +69,3 @@ mkdir -p "${HOME}/{src,bin,mnt}"
 # Set up binaries
 cp -r "${__dir}/bin" "${HOME}/"
 
-# Set up tools
-sudo pacman -S --needed --noconfirm base-devel python clang llvm
