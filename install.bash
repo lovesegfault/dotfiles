@@ -13,7 +13,9 @@ sudo pacman -Syyu --needed --noconfirm ccache
 # Set up tools
 sudo pacman -S --needed --noconfirm base-devel exa bash-completions htop sudo git  python clang llvm
 
-mkdir -p "${HOME}/.config"/{alacritty,i3,i3status}
+mkdir -p "${HOME}/.config/alacritty"
+mkdir -p "${HOME}/.config/i3"
+mkdir -p "${HOME}/.config/i3status"
 
 sudo gpasswd -a "${USER}" sys 
 sudo gpasswd -a "${USER}" disk
@@ -88,7 +90,9 @@ rm -rf "${workdir}"
 unset workdir
 
 # Set up folders
-mkdir -p "${HOME}"/{src,bin,mnt}
+mkdir -p "${HOME}/src"
+mkdir -p "${HOME}/bin"
+mkdir -p "${HOME}/mnt"
 
 # Set up binaries
 cp -r "${__dir}/bin" "${HOME}/"
