@@ -30,6 +30,14 @@ makepkg -csi
 cd "${__dir}"
 rm -rf "${workdir}"
 unset workdir
+workdir=$(mktemp -d)
+git clone --depth=1 https://aur.archlinux.org/powerline-console-fonts.git "${workdir}"
+cd "${workdir}"
+makepkg -csi
+cd "${__dir}"
+rm -rf "${workdir}"
+unset workdir
+sudo cp "${__dir}/vconsole.conf" "/etc/vconsole.conf"
 
 # Set up vim using amix/vimrc
 sudo pacman -S --needed --noconfirm git vim
