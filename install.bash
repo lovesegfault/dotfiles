@@ -15,6 +15,8 @@ sudo pacman -S --needed --noconfirm base-devel sudo git  python clang llvm
 
 mkdir -p "${HOME}/.config/{alacritty,i3,i3status}"
 
+sudo gpasswd -a "${USER}" sys disk wheel uucp lock storage
+
 # Set up fonts
 workdir=$(mktemp -d)
 git clone --depth=1 https://aur.archlinux.org/nerd-fonts-complete.git "${workdir}"
