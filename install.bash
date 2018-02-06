@@ -71,6 +71,13 @@ cp "${__dir}/tmux.conf" "${HOME}/.tmux.conf"
 # Set up zsh
 sudo pacman -S --needed --noconfirm zsh ruby
 cp "${__dir}/zshrc" "${HOME}/.zshrc"
+workdir=$(mktemp -d)
+git clone --depth=1 https://aur.archlinux.org/antigen-git.git "${workdir}"
+cd "${workdir}"
+makepkg -csi
+cd "${__dir}"
+rm -rf "${workdir}"
+unset workdir
 
 # Set up folders
 mkdir -p "${HOME}/{src,bin,mnt}"
