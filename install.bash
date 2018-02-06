@@ -24,6 +24,9 @@ sudo gpasswd -a "${USER}" uucp
 sudo gpasswd -a "${USER}" lock 
 sudo gpasswd -a "${USER}" storage
 
+# Setup makepkg
+sudo cp "${__dir}/makepkg.conf" /etc/makepkg.conf
+
 # Set up fonts
 workdir=$(mktemp -d)
 git clone --depth=1 https://aur.archlinux.org/nerd-fonts-complete.git "${workdir}"
@@ -45,9 +48,6 @@ sudo cp "${__dir}/vconsole.conf" "/etc/vconsole.conf"
 sudo pacman -S --needed --noconfirm git vim
 git clone --depth=1 https://github.com/amix/vimrc.git "${HOME}"/.vim_runtime
 sh "${HOME}"/.vim_runtime/install_awesome_vimrc.sh
-
-# Setup makepkg
-sudo cp "${__dir}/makepkg.conf" /etc/makepkg.conf
 
 # Set up Rust
 sudo pacman -S --needed --noconfirm rustup
