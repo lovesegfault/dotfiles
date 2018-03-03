@@ -12,18 +12,18 @@ env:
   # Note that some xterm terminfo databases don't declare support for italics.
   # You can verify this by checking for the presence of `smso` and `sitm` in
   # `infocmp xterm-256color`.
-  TERM: xterm-256color
+  TERM: tmux-256color
 
 # Window dimensions in character columns and lines
 # (changes require restart)
-dimensions:
+window.dimensions:
   columns: 80
   lines: 24
 
 # Adds this many blank pixels of padding around the window
 # Units are physical pixels; this is not DPI aware.
 # (change requires restart)
-padding:
+window.padding:
   x: 2
   y: 2
 
@@ -87,39 +87,38 @@ render_timer: false
 # and cursor.background colors, otherwise invert the colors of the cursor.
 custom_cursor_colors: false
 
-# Colors (Tomorrow Night)
 colors:
   # Default colors
   primary:
-    background: '0x1d1f21'
-    foreground: '0xc5c8c6'
+    background: '0x212121'
+    foreground: '0xFFFFFF'
 
   # Colors the cursor will use if `custom_cursor_colors` is true
   cursor:
-    text: '0x1d1f21'
+    text: '0x000000'
     cursor: '0xffffff'
 
   # Normal colors
   normal:
-    black:   '0x1d1f21'
-    red:     '0xcc6666'
-    green:   '0xb5bd68'
-    yellow:  '0xe6c547'
-    blue:    '0x81a2be'
-    magenta: '0xb294bb'
-    cyan:    '0x70c0ba'
-    white:   '0x373b41'
+    black:   '0x212121'
+    red:     '0xE51C23'
+    green:   '0x259B24'
+    yellow:  '0xFFEB3B'
+    blue:    '0x5677FC'
+    magenta: '0x9C27B0'
+    cyan:    '0x00BCD4'
+    white:   '0xF5F5F5'
 
   # Bright colors
   bright:
-    black:   '0x666666'
-    red:     '0xff3334'
-    green:   '0x9ec400'
-    yellow:  '0xf0c674'
-    blue:    '0x81a2be'
-    magenta: '0xb77ee0'
-    cyan:    '0x54ced6'
-    white:   '0x282a2e'
+    black:   '0x9E9E9E'
+    red:     '0xFF5177'
+    green:   '0x5AF158'
+    yellow:  '0xDDDD11'
+    blue:    '0x6889FF'
+    magenta: '0xE040FB'
+    cyan:    '0x18FFFF'
+    white: '0xFFFFFF'
 
 # Visual Bell
 #

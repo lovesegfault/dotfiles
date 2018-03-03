@@ -1,24 +1,27 @@
-# 
-# /etc/fstab: static file system information
-#
-# <file system>	<dir>	<type>	<options>	<dump>	<pass>
-# /dev/mapper/cryptroot
-UUID=db6e1f6f-0498-4072-9c17-708824c23155	/         	btrfs     	rw,noatime,compress=lzo,ssd,space_cache,subvolid=257,subvol=/@,subvol=@	0 0
+# Static information about the filesystems.
+# See fstab(5) for details.
 
-# /dev/mapper/cryptroot
-UUID=db6e1f6f-0498-4072-9c17-708824c23155	/home     	btrfs     	rw,noatime,compress=lzo,ssd,space_cache,subvolid=258,subvol=/@home,subvol=@home	0 0
-
-# /dev/mapper/cryptroot
-UUID=db6e1f6f-0498-4072-9c17-708824c23155	/.snapshots	btrfs     	rw,noatime,compress=lzo,ssd,space_cache,subvolid=259,subvol=/@snapshots,subvol=@snapshots	0 0
-
-# /dev/mapper/cryptroot
-UUID=db6e1f6f-0498-4072-9c17-708824c23155	/var      	btrfs     	rw,noatime,compress=lzo,ssd,space_cache,subvolid=260,subvol=/@var,subvol=@var	0 0
-
-# /dev/mapper/cryptroot
-UUID=db6e1f6f-0498-4072-9c17-708824c23155	/srv      	btrfs     	rw,noatime,compress=lzo,ssd,space_cache,subvolid=261,subvol=/@srv,subvol=@srv	0 0
-
+# <file system> <dir> <type> <options> <dump> <pass>
 # /dev/sda1
-UUID=676B-2420      	/boot/efi 	vfat      	rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro	0 2
+UUID=BACC-6B4D                          	/boot 	        vfat      	rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,utf8,errors=remount-ro	0 2
+
+# /dev/mapper/cryptroot LABEL=rootfs
+UUID=ebd9b11b-d6c0-419e-9107-ff6198e41aa5	/         	        btrfs     	rw,noatime,compress=zstd,ssd,space_cache,subvolid=257,subvol=/@	        0 0
+
+# /dev/mapper/cryptroot LABEL=rootfs
+UUID=ebd9b11b-d6c0-419e-9107-ff6198e41aa5	/home           	btrfs     	rw,noatime,compress=zstd,ssd,space_cache,subvolid=259,subvol=/@home	0 0
+
+# /dev/mapper/cryptroot LABEL=rootfs
+UUID=ebd9b11b-d6c0-419e-9107-ff6198e41aa5	/srv      	        btrfs     	rw,noatime,compress=zstd,ssd,space_cache,subvolid=262,subvol=/@srv	0 0
+
+# /dev/mapper/cryptroot LABEL=rootfs
+UUID=ebd9b11b-d6c0-419e-9107-ff6198e41aa5	/var/log        	btrfs     	rw,noatime,compress=zstd,ssd,space_cache,subvolid=260,subvol=/@log	0 0
+
+# /dev/mapper/cryptroot LABEL=rootfs
+UUID=ebd9b11b-d6c0-419e-9107-ff6198e41aa5	/var/tmp        	btrfs     	rw,noatime,compress=zstd,ssd,space_cache,subvolid=263,subvol=/@tmp	0 0
+
+# /dev/mapper/cryptroot LABEL=rootfs
+UUID=ebd9b11b-d6c0-419e-9107-ff6198e41aa5	/var/cache/pacman/pkg	btrfs     	rw,noatime,compress=zstd,ssd,space_cache,subvolid=261,subvol=/@pkg	0 0
 
 # /dev/sdb1
-UUID=abfffd5b-1234-436f-9b33-e07cc2adf12f      /mnt/media      btrfs             rw,noatime,compress=zstd,autodefrag  0 0
+UUID=abfffd5b-1234-436f-9b33-e07cc2adf12f /mnt/media btrfs rw,noatime,compress=zstd,autodefrag 0 0

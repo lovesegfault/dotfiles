@@ -8,18 +8,16 @@ export PATH=$HOME/bin:/usr/local/bin:$PATH # Self-compiled
 export PATH=$PATH:$gempath # Ruby Gems
 export PATH=$PATH:$HOME/.node_modules/bin
 #export PATH=$PATH:/opt/cuda/bin # Cuda 
-#export PATH=$PATH:/opt/Xilinx/Vivado/2016.4/bin/ # Vivado/FPGA
+export PATH=$PATH:/opt/Xilinx/Vivado/2017.4/bin/ # Vivado/FPGA
 export PATH=$PATH:$HOME/.cargo/bin # Rust
 export PATH=$PATH:$GOPATH/bin
 
-export TERM="xterm-256color" # MOAR COLOURS
+export TERM="tmux-256color" # MOAR COLOURS
 
 export SSH_KEY_PATH="$HOME/.ssh/id_rsa"
 export GPG_TTY=$(tty)
 
 export XDG_CONFIG_HOME="$HOME/.config"
-
-# export SWAYSOCK=$(ls /run/user/*/sway-ipc.*.sock | head -n 1)
 
 # Uses nano for SSH sessions to avoid bugs with Vim colors.
 if [[ -n $SSH_CONNECTION ]]; then
@@ -70,17 +68,16 @@ bindkey '^[[B' history-substring-search-down
 
 # Pacman stuff
 # pacaur, yaourt, makepkg: use powerpill instead of pacman
-export PACMAN=/usr/bin/powerpill
+# export PACMAN=/usr/bin/powerpill
 
 # Some useful aliases
-alias ls="exa -bhl"
-alias la="exa -bhla"
+alias ls="exa -bhlF"
+alias la="exa -bhlFa"
 alias reflect="sudo reflector --verbose --latest 200 --country US --sort rate --save /etc/pacman.d/mirrorlist"
-alias gpuon="sudo /bin/sh -c 'tee /proc/acpi/bbswitch <<< ON'"
-alias gpuoff="sudo rmmod nvidia_uvm && sudo rmmod nvidia && sudo /bin/sh -c 'tee /proc/acpi/bbswitch <<< OFF'"
 alias -g toclip="| xclip -selection c"
-alias sync="sync & watch -n 1 grep -e Dirty: /proc/meminfo"
+alias sync="sync & watch -n 1 rg -e Dirty: /proc/meminfo"
 alias chkbd="/home/bemeurer/bin/chkbd.bash"
 alias clippy="cargo +nightly clippy"
 alias modules="cargo +nightly modules"
-
+alias vim=nvim
+alias vi=nvim

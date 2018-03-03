@@ -11,7 +11,7 @@ __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 sudo pacman -Syyu --needed --noconfirm ccache
 # Set up tools
-sudo pacman -S --needed --noconfirm base-devel exa bash-completions htop sudo git  python clang llvm
+sudo pacman -S --needed --noconfirm base-devel exa htop sudo git  python clang llvm
 
 mkdir -p "${HOME}/.config/alacritty"
 mkdir -p "${HOME}/.config/i3"

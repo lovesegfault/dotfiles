@@ -2,13 +2,11 @@ icons = "awesome"
 
 [theme]
 name = "solarized-dark"
-[theme.overrides]
-idle_bg = "#1C1C1C"
 
-[[block]]
-block = "weather"
-format = "{weather} ({location}) {temp}°, {wind} m/s"
-service = { name = "openweathermap", api_key = "e7fe7c65660d2247ec90dab22512240e", city_id = "5392952", units = "metric" }
+#[[block]]
+#block = "weather"
+#format = "{weather} ({location}) {temp}°, {wind} m/s"
+#service = { name = "openweathermap", api_key = "e7fe7c65660d2247ec90dab22512240e", city_id = "5392952", units = "metric" }
 
 [[block]]
 block = "sound"
