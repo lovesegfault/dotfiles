@@ -3,10 +3,10 @@ icons = "awesome"
 [theme]
 name = "solarized-dark"
 
-#[[block]]
-#block = "weather"
-#format = "{weather} ({location}) {temp}°, {wind} m/s"
-#service = { name = "openweathermap", api_key = "e7fe7c65660d2247ec90dab22512240e", city_id = "5392952", units = "metric" }
+[[block]]
+block = "weather"
+format = "{weather} ({location}) {temp}°C"
+service = { name = "openweathermap", api_key = "e7fe7c65660d2247ec90dab22512240e", city_id = "5392952", units = "metric" }
 
 [[block]]
 block = "sound"
@@ -50,6 +50,9 @@ interval = 1
 block = "temperature"
 collapsed = false
 interval = 5
+
+[[block]]
+block = "uptime"
 
 [[block]]
 block = "time"
