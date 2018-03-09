@@ -11,21 +11,21 @@ __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 sudo pacman -Syyu --needed --noconfirm ccache
 # Set up tools
-sudo pacman -S --needed --noconfirm base-devel exa htop sudo git  python clang llvm
+sudo pacman -S --needed --noconfirm base-devel exa htop sudo git nvim python clang llvm
 
 mkdir -p "${HOME}/.config/alacritty"
 mkdir -p "${HOME}/.config/i3"
 mkdir -p "${HOME}/.config/i3status"
 
-sudo gpasswd -a "${USER}" sys 
+sudo gpasswd -a "${USER}" sys
 sudo gpasswd -a "${USER}" disk
-sudo gpasswd -a "${USER}" wheel 
-sudo gpasswd -a "${USER}" uucp 
-sudo gpasswd -a "${USER}" lock 
+sudo gpasswd -a "${USER}" wheel
+sudo gpasswd -a "${USER}" uucp
+sudo gpasswd -a "${USER}" lock
 sudo gpasswd -a "${USER}" storage
 
 # Setup makepkg
-sudo cp "${__dir}/makepkg.conf" /etc/makepkg.conf
+sudo cp "${__dir}/makepkg.conf" "${HOME}/.config/pacman/makepkg.conf"
 
 # Set up fonts
 workdir=$(mktemp -d)
@@ -51,6 +51,7 @@ sh "${HOME}"/.vim_runtime/install_awesome_vimrc.sh
 
 # Set up Rust
 sudo pacman -S --needed --noconfirm rustup
+rustup toolchain install stable
 rustup default stable
 export PATH="${PATH}:${HOME}/.cargo/bin" # Rust
 
