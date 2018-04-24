@@ -24,7 +24,7 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'mattn/gist-vim'
 Plug 'fatih/vim-go'
-Plug 'klen/python-mode'
+Plug 'python-mode/python-mode', { 'branch': 'develop' }
 Plug 'rust-lang/rust.vim'
 Plug 'flazz/vim-colorschemes'
 Plug 'terryma/vim-multiple-cursors'
@@ -189,6 +189,8 @@ let g:deoplete#sources#rust#racer_binary = '/home/bemeurer/.cargo/bin/racer'
 let g:deoplete#sources#rust#rust_source_path = '/usr/src/rust/src/'
 
 let g:deoplete#sources#go#gocode_binary = '/usr/bin/gocode'
+
+let g:ale_sign_column_always = 1
 
 let g:tmuxcomplete#trigger = ''
 

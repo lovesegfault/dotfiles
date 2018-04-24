@@ -12,10 +12,16 @@ export PATH=$PATH:/opt/Xilinx/Vivado/2017.4/bin/ # Vivado/FPGA
 export PATH=$PATH:$HOME/.cargo/bin # Rust
 export PATH=$PATH:$GOPATH/bin
 
+export ANDROID_HOME=/opt/android-sdk # Android -- I hate my life
+
 export TERM="tmux-256color" # MOAR COLOURS
 
 export SSH_KEY_PATH="$HOME/.ssh/id_rsa"
 export GPG_TTY=$(tty)
+
+export TASKDDATA=/var/lib/taskd
+
+export LOCATION_QUERY=1
 
 export XDG_CONFIG_HOME="$HOME/.config"
 
@@ -79,5 +85,6 @@ alias sync="sync & watch -n 1 rg -e Dirty: /proc/meminfo"
 alias chkbd="/home/bemeurer/bin/chkbd.bash"
 alias clippy="cargo +nightly clippy"
 alias modules="cargo +nightly modules"
+alias screenshot="maim -m 10 -u ~/pictures/screenshots/$(date +%s).png"
 alias vim=nvim
 alias vi=nvim

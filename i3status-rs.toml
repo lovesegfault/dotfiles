@@ -38,9 +38,9 @@ block = "memory"
 display_type = "memory"
 format_mem = "{Mup}%"
 
-[[block]]
-block = "battery"
-interval = 10
+#[[block]]
+#block = "battery"
+#interval = 10
 
 [[block]]
 block = "cpu"
