@@ -72,19 +72,18 @@ zmodload zsh/terminfo
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 
-# Pacman stuff
-# pacaur, yaourt, makepkg: use powerpill instead of pacman
-# export PACMAN=/usr/bin/powerpill
-
 # Some useful aliases
 alias ls="exa -bhlF"
 alias la="exa -bhlFa"
-alias reflect="sudo reflector --verbose --latest 200 --country US --sort rate --save /etc/pacman.d/mirrorlist"
+alias reflect="sudo reflector --verbose --latest 200 --sort rate --save /etc/pacman.d/mirrorlist"
 alias -g toclip="| xclip -selection c"
 alias sync="sync & watch -n 1 rg -e Dirty: /proc/meminfo"
 alias chkbd="/home/bemeurer/bin/chkbd.bash"
 alias clippy="cargo +nightly clippy"
 alias modules="cargo +nightly modules"
 alias screenshot="maim -m 10 -u ~/pictures/screenshots/$(date +%s).png"
+alias aur='repose -vf aur -r /var/cache/pacman/aur'
+alias wg="sudo wg"
+alias pacman="powerpill"
 alias vim=nvim
 alias vi=nvim
