@@ -1,6 +1,6 @@
 # GRUB boot loader configuration
 
-GRUB_DEFAULT="Advanced options for Arch Linux>Arch Linux, with Linux linux"
+GRUB_DEFAULT="Advanced options for Arch Linux>Arch Linux, with Linux linux-ck-ivybridge"
 GRUB_TIMEOUT="0"
 GRUB_RECORDFAIL_TIMEOUT="$GRUB_TIMEOUT"
 GRUB_DISTRIBUTOR="Arch"
