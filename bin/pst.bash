@@ -1,0 +1,1 @@
+if [ -t 1 ] ; then echo terminal; else echo "not a terminal"; fi

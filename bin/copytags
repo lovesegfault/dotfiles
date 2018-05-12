@@ -1,0 +1,24 @@
+#! /usr/bin/env python3
+
+from sys import argv
+import mutagen
+
+OUTFILES = []
+
+try:
+    assert len(argv) > 2
+    INFILE = mutagen.File(argv[1], easy=True)
+    for of in argv[2:]:
+        OUTFILES.append(mutagen.File(of, easy=True))
+except Exception as err:
+    print("Usage: %s SRC DEST [DEST]..." % argv[0])
+    print(str(err))
+    exit(1)
+
+for of in OUTFILES:
+    for tag in INFILE.keys():
+        try:
+            of[tag] = INFILE[tag]
+        except:
+            pass
+    of.save()

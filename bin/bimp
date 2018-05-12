@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+dir=$(mktemp -d)
+cp -r -v "${1}" "${dir}"
+mus="${dir}/${1}"
+
+find "${mus}" -name "*.flac" | parallel id3v2 --delete-all {}
+find "${mus}" -name "*.flac" | parallel flac --best -f {}
+
+beet -vv import "${mus}" || true
+
+rm -rf "${dir}"

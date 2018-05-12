@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+echo -n "Setting up..."
+dir=$(mktemp -d)
+v0dir=$(mktemp -d)
+cbrdir=$(mktemp -d)
+echo " OK"
+
+echo -n "Copying..."
+cp -r "${1}" "${dir}"
+mus="${dir}/${1}"
+echo " OK"
+
+echo -n "Transcoding VBR..."
+parallel lame -V0 {} -o {.}.mp3 ::: "${mus}/"*.flac 2> /dev/null
+parallel copytags {} {.}.mp3 ::: "${mus}/"*.flac 2> /dev/null
+echo " OK"
+
+echo -n "Moving..."
+mv "${mus}/"*.mp3 "${v0dir}"
+cp "${mus}/cover.jpg" "${v0dir}"
+echo " OK"
+
+echo -n "Transcoding CBR..."
+parallel lame -b 320 {} -o {.}.mp3 ::: "${mus}/"*.flac 2> /dev/null
+parallel copytags {} {.}.mp3 ::: "${mus}/"*.flac 2> /dev/null
+echo " OK"
+
+echo -n "Moving..."
+mv "${mus}/"*.mp3 "${cbrdir}"
+cp "${mus}/cover.jpg" "${cbrdir}"
+echo " OK"
+
+echo -n "Copying back..."
+cp -r "${v0dir}" ./"${1} [V0 VBR]"
+cp -r "${cbrdir}" ./"${1} [320 CBR]"
+echo " OK"
+
+echo -n "Cleaning up..."
+rm -rf "${dir}"
+rm -rf "${v0dir}"
+rm -rf "${cbrdir}"
+echo " OK"
