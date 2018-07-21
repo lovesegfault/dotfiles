@@ -5,11 +5,10 @@ Plug 'autozimu/LanguageClient-neovim', {
             \ 'do': 'bash install.sh',
             \ }
 Plug 'junegunn/fzf'
+Plug 'ctrlpvim/ctrlp.vim'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'zchee/deoplete-clang'
-Plug 'sebastianmarkow/deoplete-rust'
 Plug 'zchee/deoplete-jedi'
-Plug 'zchee/deoplete-go', { 'do': 'make'}
 Plug 'fszymanski/deoplete-emoji'
 Plug 'wellle/tmux-complete.vim'
 Plug 'wokalski/autocomplete-flow'
@@ -23,7 +22,6 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'scrooloose/nerdcommenter'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'mattn/gist-vim'
-Plug 'fatih/vim-go'
 Plug 'python-mode/python-mode', { 'branch': 'develop' }
 Plug 'rust-lang/rust.vim'
 Plug 'flazz/vim-colorschemes'
@@ -41,6 +39,7 @@ Plug 'elzr/vim-json'
 Plug 'salinasv/vim-vhdl'
 Plug 'vim-scripts/ucf.vim'
 Plug 'vim-scripts/c.vim'
+Plug 'jiangmiao/auto-pairs'
 call plug#end()
 " General --------------------------------------------------------------------
 set number
@@ -168,12 +167,33 @@ catch
 endtry
 
 " ----------------------------------------------------------------------------
+function! s:CloseIfOnlyControlWinLeft()
+  if winnr("$") != 1
+    return
+  endif
+  if (exists("t:NERDTreeBufName") && bufwinnr(t:NERDTreeBufName) != -1)
+        \ || &buftype == 'quickfix'
+    q
+  endif
+endfunction
+augroup CloseIfOnlyControlWinLeft
+  au!
+  au BufEnter * call s:CloseIfOnlyControlWinLeft()
+augroup END
+
+autocmd vimenter * NERDTree
+autocmd VimEnter * wincmd p
+
+let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
+let g:ctrlp_user_caching = 0
+
 let g:LanguageClient_serverCommands = {
             \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
-            \ 'javascript': ['javascript-typescript-stdio'],
-            \ 'javascript.jsx': ['javascript-typescript-stdio'],
+            \ 'c': ['clangd'],
+            \ 'cpp': ['clangd'],
             \ }
 
+nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
 nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
@@ -181,15 +201,15 @@ nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
 " Use deoplete.
 let g:deoplete#enable_at_startup = 1
 
-let g:deoplete#sources#clang#libclang_path = '/usr/lib/libclang.so'
-let g:deoplete#sources#clang#clang_header = '/usr/lib/clang'
+let g:deoplete#sources#clang#libclang_path = '/usr/local/Cellar/llvm/6.0.0/lib/libclang.dylib'
+let g:deoplete#sources#clang#clang_header = '/usr/local/Cellar/llvm/6.0.0/bin/clang'
 let g:deoplete#sources#clang#sort_algo = 'priority'
-
-let g:deoplete#sources#rust#rust_source_path = '/usr/src/rust/src/'
 
 let g:deoplete#sources#go#gocode_binary = '/usr/bin/gocode'
 
 let g:ale_sign_column_always = 1
+let g:ale_rust_cargo_use_check = 1
+let g:ale_rust_cargo_check_all_targets = 1
 
 let g:tmuxcomplete#trigger = ''
 
@@ -209,5 +229,7 @@ let  g:C_UseTool_cmake = 'yes'
 let  g:C_UseTool_doxygen = 'yes'
 
 let g:NERDTreeWinPos = "left"
+
+let g:SuperTabDefaultCompletionType = "<c-n>"
 
 colorscheme cobalt2
