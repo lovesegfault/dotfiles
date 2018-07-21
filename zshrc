@@ -1,48 +1,40 @@
 #!usr/bin/zsh
 
-# Standard
-source /home/bemeurer/src/Standard/General/.profile
+PATH=$PATH:/opt/intel/bin/
+PATH=$PATH:/opt/Xilinx/Vivado/2017.4/bin/ # Vivado/FPGA
+PATH=$HOME/bin:/usr/local/bin:$PATH # Self-compiled
+PATH=$PATH:$HOME/.cargo/bin # Rust
+export PATH
 
-export PATH=$PATH:$HOME/.node_modules/bin
+SSH_KEY_PATH="$HOME/.ssh/id_rsa"
+GPG_TTY=$(tty)
+export SSH_KEY_PATH
+export GPG_TTY
 
-export PATH=$PATH:/opt/Xilinx/Vivado/2017.4/bin/ # Vivado/FPGA
+TERM=tmux-256color
+export TERM
 
-export PATH=$HOME/bin:/usr/local/bin:$PATH # Self-compiled
+XDG_CONFIG_HOME="$HOME/.config"
+XDG_RUNTIME_DIR="/run/user/$UID"
+DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
+export XDG_CONFIG_HOME
+export XDG_RUNTIME_DIR
+export DBUS_SESSION_BUS_ADDRESS
 
-export PATH=$PATH:$HOME/.cargo/bin # Rust
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+export HISTFILE
+export HISTSIZE
+export SAVEHIST
 
-gempath=$(ruby -rrubygems -e "puts Gem.user_dir")/bin
-export PATH=$PATH:$gempath # Ruby Gems
-
-export GOPATH=$HOME/.go
-export PATH=$PATH:$GOPATH/bin
-
-export SSH_KEY_PATH="$HOME/.ssh/id_rsa"
-export GPG_TTY=$(tty)
-
-export TERM=tmux-256color
-
-export LOCATION_QUERY=1
-
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_RUNTIME_DIR="/run/user/$UID"
-export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
-
-export HISTFILE=~/.zsh_history
-export HISTSIZE=10000
-export SAVEHIST=10000
-
-# Uses nano for SSH sessions to avoid bugs with Vim colors.
-if [[ -n $SSH_CONNECTION ]]; then
-   export EDITOR='nano'
- else
-   export EDITOR='nvim'
-fi
-
-export UNCRUSTIFY_CONFIG="$HOME"/.uncrustify.cfg
+EDITOR='nvim'
+export EDITOR
 
 # zplug
-source /usr/share/zsh/scripts/zplug/init.zsh
+ZPLUG_HOME=/usr/share/zsh/scripts/zplug
+export ZPLUG_HOME
+source $ZPLUG_HOME/init.zsh
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 zplug "zdharma/fast-syntax-highlighting", defer:2
 zplug "voronkovich/gitignore.plugin.zsh"
@@ -56,6 +48,7 @@ zplug "zpm-zsh/colors"
 zplug "hcgraf/zsh-sudo"
 zplug "plugins/colored-man-pages", from:oh-my-zsh
 zplug "plugins/archlinux", from:oh-my-zsh
+zplug "valentinocossar/sublime"
 # Load theme file
 zplug 'agnoster/agnoster-zsh-theme', as:theme
 zplug load
@@ -80,9 +73,23 @@ alias -g toclip="| xclip -selection c"
 alias sync="sync & watch -n 1 rg -e Dirty: /proc/meminfo"
 alias chkbd="/home/bemeurer/bin/chkbd.bash"
 alias clippy="cargo +nightly clippy"
-alias modules="cargo +nightly modules"
 alias screenshot="maim -m 10 -u ~/pictures/screenshots/$(date +%s).png"
-alias aurup="aur vercmp-devel | cut -d: -f1 | aur sync --no-ver-shallow -"
+alias aurup="aur vercmp-devel | cut -d: -f1 | aur sync --chroot --upgrades --no-ver-shallow -"
 alias wg="sudo wg"
 alias vim=nvim
 alias vi=nvim
+alias ga="git add -A"
+alias gc="git commit"
+alias gd="git difftool"
+alias gf="git fetch --prune"
+alias gl="git log"
+alias gs="git status"
+alias gm="git merge"
+alias gp="git push"
+alias gr="git rebase"
+alias cb="cargo build"
+alias cc="cargo check"
+alias cr="cargo run"
+alias cbr="cargo build --release"
+alias ccr="cargo check --release"
+alias crr="cargo run --release"
