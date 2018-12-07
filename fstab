@@ -1,62 +1,31 @@
-# Static information about the filesystems.
-# See fstab(5) for details.
+# /etc/fstab: static file system information.
+#
+# noatime turns off atimes for increased performance (atimes normally aren't 
+# needed); notail increases performance of ReiserFS (at the expense of storage 
+# efficiency).  It's safe to drop the noatime options if you want and to 
+# switch between notail / tail freely.
+#
+# The root filesystem should have a pass number of either 0 or 1.
+# All other filesystems should have a pass number of 0 or greater than 1.
+#
+# See the manpage fstab(5) for more information.
+#
 
-# <file system> <dir> <type> <options> <dump> <pass>
-# /dev/sda1
-UUID=BACC-6B4D      	/boot     	vfat      	rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,utf8,errors=remount-ro	0 2
+# <fs>			<mountpoint>	<type>		<opts>		<dump/pass>
+UUID=02F7-05AC /boot vfat noauto,noatime 0 2
+UUID=ef29396e-33de-4779-8f39-e87b4eb5cf7b / btrfs rw,noatime,compress=zstd,ssd,space_cache=v2 0 1
 
-# vault/sys/antonius/root/default
-vault/sys/antonius/root/default	/         	zfs       	rw,noatime,xattr,noacl	0 0
+# NOTE: If your BOOT partition is ReiserFS, add the notail option to opts.
+#
+# NOTE: Even though we list ext4 as the type here, it will work with ext2/ext3
+#       filesystems.  This just tells the kernel to use the ext4 driver.
+#
+# NOTE: You can use full paths to devices like /dev/sda3, but it is often
+#       more reliable to use filesystem labels or UUIDs. See your filesystem
+#       documentation for details on setting a label. To obtain the UUID, use
+#       the blkid(8) command.
 
-# vault/sys/antonius/var/cache
-vault/sys/antonius/var/cache	/var/cache	zfs       	rw,xattr,noacl	0 0
-
-# vault/sys/antonius/var/lib/libvirt
-vault/sys/antonius/var/lib/libvirt	/var/lib/libvirt	zfs       	rw,xattr,noacl	0 0
-
-# vault/sys/antonius/home
-vault/sys/antonius/home	/home     	zfs       	rw,xattr,noacl	0 0
-
-# vault/sys/antonius/home/bemeurer
-vault/sys/antonius/home/bemeurer	/home/bemeurer	zfs       	rw,xattr,noacl	0 0
-
-# vault/sys/antonius/home/bemeurer/cache
-vault/sys/antonius/home/bemeurer/cache	/home/bemeurer/.cache	zfs       	rw,xattr,noacl	0 0
-
-# vault/sys/antonius/home/bemeurer/config
-vault/sys/antonius/home/bemeurer/config	/home/bemeurer/.config	zfs       	rw,xattr,noacl	0 0
-
-# vault/sys/antonius/home/bemeurer/local
-vault/sys/antonius/home/bemeurer/local	/home/bemeurer/.local	zfs       	rw,xattr,noacl	0 0
-
-# vault/sys/antonius/home/bemeurer/local/share/Steam
-vault/sys/antonius/home/bemeurer/local/share/Steam	/home/bemeurer/.local/share/Steam	zfs       	rw,xattr,noacl	0 0
-
-# vault/sys/antonius/usr/local
-vault/sys/antonius/usr/local	/usr/local	zfs       	rw,xattr,noacl	0 0
-
-# vault/sys/antonius/var/lib/lxc
-vault/sys/antonius/var/lib/lxc	/var/lib/lxc	zfs       	rw,xattr,noacl	0 0
-
-# vault/sys/antonius/var/lib/lxd
-vault/sys/antonius/var/lib/lxd	/var/lib/lxd	zfs       	rw,xattr,noacl	0 0
-
-# vault/sys/antonius/var/lib/machines
-vault/sys/antonius/var/lib/machines	/var/lib/machines	zfs       	rw,xattr,noacl	0 0
-
-# vault/sys/antonius/var/lib/systemd/coredump
-vault/sys/antonius/var/lib/systemd/coredump	/var/lib/systemd/coredump	zfs       	rw,xattr,noacl	0 0
-
-# vault/sys/antonius/var/log
-vault/sys/antonius/var/log	/var/log  	zfs       	rw,xattr,noacl	0 0
-
-# vault/sys/antonius/var/log/journal
-vault/sys/antonius/var/log/journal	/var/log/journal	zfs       	rw,xattr,posixacl	0 0
-
-# data
-vault/data/docs /home/bemeurer/documents zfs rw,xattr,noacl 0 0
-vault/data/pics /home/bemeurer/pictures zfs rw,xattr,noacl 0 0
-vault/data/src /home/bemeurer/src zfs rw,xattr,noacl 0 0
-
-# /dev/sdb1
-UUID=abfffd5b-1234-436f-9b33-e07cc2adf12f /mnt/media btrfs rw,noatime,compress=zstd,autodefrag 0 0
+#LABEL=boot		/boot		ext4		noauto,noatime	1 2
+#UUID=58e72203-57d1-4497-81ad-97655bd56494		/		ext4		noatime		0 1
+#LABEL=swap		none		swap		sw		0 0
+#/dev/cdrom		/mnt/cdrom	auto		noauto,ro	0 0
