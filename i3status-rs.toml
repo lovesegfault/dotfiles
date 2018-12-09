@@ -4,11 +4,6 @@ icons = "awesome"
 name = "solarized-dark"
 
 [[block]]
-block = "weather"
-format = "{weather} ({location}) {temp}°C"
-service = { name = "openweathermap", api_key = "e7fe7c65660d2247ec90dab22512240e", city_id = "5392952", units = "metric" }
-
-[[block]]
 block = "sound"
 
 [[block]]
@@ -16,7 +11,7 @@ block = "backlight"
 
 [[block]]
 block = "net"
-device = "wlp3s0"
+device = "wlp0s20f3"
 ssid = true
 ip = true
 speed_up = false
@@ -38,9 +33,9 @@ block = "memory"
 display_type = "memory"
 format_mem = "{Mup}%"
 
-#[[block]]
-#block = "battery"
-#interval = 10
+[[block]]
+block = "battery"
+interval = 10
 
 [[block]]
 block = "cpu"

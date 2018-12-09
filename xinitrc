@@ -5,5 +5,5 @@ numlockx &
 
 export SSH_AUTH_SOCK
 export DESKTOP_SESSION=gnome
-
+xrdb -merge ~/.Xresources
 exec i3
