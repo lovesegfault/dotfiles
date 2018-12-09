@@ -1,0 +1,8 @@
+Host *
+    ControlMaster auto
+    ControlPersist 30m
+    ControlPath ~/.ssh/sockets/socket-%r@%h:%p
+    AddressFamily inet
+    ForwardAgent yes
+    AddKeysToAgent yes
+    IdentityFile ~/.ssh/id_rsa
