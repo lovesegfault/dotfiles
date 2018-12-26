@@ -236,7 +236,7 @@ let g:ctrlp_user_caching = 0
 
 " ---- LSP server commands
 let g:LanguageClient_serverCommands = {
-            \ 'rust': ['~/.cargo/bin/rustup', 'run', 'nightly', 'rls'],
+            \ 'rust': ['rls'],
             \ 'c': ['/usr/lib/llvm/7/bin/clangd'],
             \ 'cpp': ['/usr/lib/llvm/7/bin/clangd'],
             \ }
@@ -265,6 +265,9 @@ let g:ale_rust_cargo_check_examples = 1
 let g:tmuxcomplete#trigger = ''
 
 let g:neosnippet#enable_completed_snippet = 1
+
+" ---- VimTeX
+let g:vimtex_view_method = 'zathura'
 
 " ---- Airline
 let g:airline#extensions#tabline#enabled = 1
