@@ -1,0 +1,3 @@
+#!/bin/bash
+
+chromium --app=https://standardcognition.slack.com >> /dev/null 2>&1 &!
