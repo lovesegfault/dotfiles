@@ -3,7 +3,7 @@
 if [ -z $IN_NIX_SHELL ];then
     PATH=$PATH:/sbin:/usr/sbin
     PATH=$HOME/bin:$PATH # Self-compiled
-    # PATH=$PATH:$HOME/.cargo/bin # Rust
+    PATH=$PATH:$HOME/.cargo/bin # Rust
     export PATH
 fi
 
@@ -70,7 +70,7 @@ bindkey "^[[1;5C" forward-word
 bindkey "^[[1;3C" forward-word
 bindkey "^[[1;5D" backward-word
 bindkey "^[[1;3D" backward-word
-bindkey -s "^O" 'nvim $(fzf)^M'
+bindkey -s "^O" 'nvim $(sk -m)^M'
 
 # Some useful aliases
 alias l="exa -bhlF"
