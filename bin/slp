@@ -1,0 +1,5 @@
+#!/bin/bash
+
+swaylock -c 000000 >> /dev/null 2>&1 &
+sudo pm-suspend
+
