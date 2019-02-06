@@ -1,16 +1,36 @@
 #!/bin/bash
 
+echo "-------------------------" >> ~/.sway.log
+echo "$(timedatectl | rg -i "local time" | cut -f 2- -d ':')" >> ~/.sway.log
+echo "-------------------------" >> ~/.sway.log
+
+
+eval "$(systemctl --user show-environment)"
+
 if [ -x /usr/bin/gpg-agent ]; then
  eval "$(/usr/bin/gpg-agent --daemon)"
 fi
 
 eval "$(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh,gpg)"
-/usr/libexec/polkit-gnome-authentication-agent-1 &
+dbus-update-activation-environment --all >> ~/.sway.log 2>&1
+
+echo 'power on' | bluetoothctl
 
 export SSH_AUTH_SOCK
-export QT_QPA_PLATFORM=wayland
-export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
-export DESKTOP_SESSION=gnome
-export _JAVA_AWT_WM_NONREPARENTING=1
+export DBUS_SESSION_BUS_ADDRESS
 
-exec sway
+# qt
+export QT_QPA_PLATFORM=wayland
+export QT_WAYLAND_FORCE_DPI=physical
+export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+# java
+export _JAVA_AWT_WM_NONREPARENTING=1
+# elementary
+export ECORE_EVAS_ENGINE=wayland_egl
+export ELM_ENGINE=wayland_egl
+# sdl
+export SDL_VIDEODRIVER=wayland
+
+sway & >> ~/.sway.log 2>&1
+
+/usr/libexec/polkit-gnome-authentication-agent-1 &

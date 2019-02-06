@@ -23,8 +23,16 @@
 #       documentation for details on setting a label. To obtain the UUID, use
 #       the blkid(8) command.
 
-UUID=0827-4CA7 /boot vfat defaults,noatime 1 2
 #LABEL=boot		/boot		ext4		noauto,noatime	1 2
 #UUID=58e72203-57d1-4497-81ad-97655bd56494		/		ext4		noatime		0 1
 #LABEL=swap		none		swap		sw		0 0
 #/dev/cdrom		/mnt/cdrom	auto		noauto,ro	0 0
+
+# UEFI ESP partition
+UUID=1A5C-974C          			/boot           	vfat            defaults,noatime       	0 2
+
+# Mapped BTRFS rootfs
+UUID=ac4187a5-5310-40c2-adb0-b16428c788a4	/			btrfs		rw,noatime,compress=lzo 0 2
+
+# TMPDIR
+tmpfs						/var/tmp/portage	tmpfs		size=12G,uid=portage,gid=portage,mode=775,noatime	0 0

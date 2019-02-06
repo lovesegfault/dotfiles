@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+
+connected() {
+    status="$(nmcli radio wifi)"
+    if [ $status = 'enabled' ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+if connected; then
+    nmcli radio wifi off
+else
+    nmcli radio wifi on
+fi
+
