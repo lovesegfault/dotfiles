@@ -1,59 +1,74 @@
-# GRUB boot loader configuration
+# Copyright 1999-2015 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+#
+# To populate all changes in this file you need to regenerate your
+# grub configuration file afterwards:
+#     'grub2-mkconfig -o /boot/grub/grub.cfg'
+#
+# See the grub info page for documentation on possible variables and
+# their associated values.
 
-GRUB_DEFAULT="Advanced options for Arch Linux>Arch Linux, with Linux linux-ck-ivybridge"
-GRUB_TIMEOUT="0"
-GRUB_RECORDFAIL_TIMEOUT="$GRUB_TIMEOUT"
-GRUB_DISTRIBUTOR="Arch"
-GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 vga=current rd.systemd.show_status=false rd.udev.log-priority=3"
-GRUB_CMDLINE_LINUX="rd.luks.uuid=571864c6-f667-4729-82fd-9b57aac8de0e rd.luks.name=571864c6-f667-4729-82fd-9b57aac8de0e=cryptroot root=/dev/mapper/cryptroot scsi_mod.use_blk_mq=1 modprobe.blacklist=pcspkr vsyscall=emulate"
+GRUB_DISTRIBUTOR="Gentoo"
 
-# Preload both GPT and MBR modules so that they are not missed
-GRUB_PRELOAD_MODULES="part_gpt part_msdos"
+# Default menu entry
+GRUB_DEFAULT=0
+# Boot the default entry this many seconds after the menu is displayed
+GRUB_TIMEOUT=0
+#GRUB_TIMEOUT_STYLE=menu
+GRUB_RECORDFAIL_TIMEOUT=$GRUB_TIMEOUT
 
-# Uncomment to enable booting from LUKS encrypted devices
-GRUB_ENABLE_CRYPTODISK="y"
+# Append parameters to the linux kernel command line
+#GRUB_CMDLINE_LINUX="dobtrfs crypt_root=UUID=ac2c4f5a-0ccb-4dff-8534-65ab32419775 real_root=/dev/mapper/root rootfstype=btrfs rw nvidia.modeset=0"
+GRUB_CMDLINE_LINUX="root=UUID=ac4187a5-5310-40c2-adb0-b16428c788a4 rd.luks.uuid=03ee01a0-0bc1-4bdf-b85b-15b3aae70c07 rootfstype=btrfs rw nvidia.modeset=0"
+#
+# Examples:
+#
+# Boot with network interface renaming disabled
+# GRUB_CMDLINE_LINUX="net.ifnames=0"
+#
+# Boot with systemd instead of sysvinit (openrc)
+# GRUB_CMDLINE_LINUX="init=/usr/lib/systemd/systemd"
 
-# Uncomment to enable Hidden Menu, and optionally hide the timeout count
-GRUB_HIDDEN_TIMEOUT="0"
-GRUB_HIDDEN_TIMEOUT_QUIET="true"
+# Append parameters to the linux kernel command line for non-recovery entries
+GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=2 i915.fastboot=1 vga=current rd.systemd.show_status=auto rd.udev.log_priority=3"
 
-# Uncomment to use basic console
-GRUB_TERMINAL_INPUT="console"
+# Uncomment to disable graphical terminal (grub-pc only)
+#GRUB_TERMINAL=console
 
-# Uncomment to disable graphical terminal
-#GRUB_TERMINAL_OUTPUT="console"
+# The resolution used on graphical terminal.
+# Note that you can use only modes which your graphic card supports via VBE.
+# You can see them in real GRUB with the command `vbeinfo'.
+#GRUB_GFXMODE=640x480
 
-# The resolution used on graphical terminal
-# note that you can use only modes which your graphic card supports via VBE
-# you can see them in real GRUB with the command `vbeinfo'
-GRUB_GFXMODE="1920x1080"
+# Set to 'text' to force the Linux kernel to boot in normal text
+# mode, 'keep' to preserve the graphics mode set using
+# 'GRUB_GFXMODE', 'WIDTHxHEIGHT'['xDEPTH'] to set a particular
+# graphics mode, or a sequence of these separated by commas or
+# semicolons to try several modes in sequence.
+#GRUB_GFXPAYLOAD_LINUX=
 
-# Uncomment to allow the kernel use the same resolution used by grub
-GRUB_GFXPAYLOAD_LINUX="keep"
-
-# Uncomment if you want GRUB to pass to the Linux kernel the old parameter 
-# format "root=/dev/xxx" instead of "root=/dev/disk/by-uuid/xxx" 
-#GRUB_DISABLE_LINUX_UUID="true"
-
-# Uncomment to disable generation of recovery mode menu entries
-GRUB_DISABLE_RECOVERY="true"
-
-# Uncomment and set to the desired menu colors.  Used by normal and wallpaper 
-# modes only.  Entries specified as foreground/background.
-export GRUB_COLOR_NORMAL="light-blue/black"
-export GRUB_COLOR_HIGHLIGHT="light-cyan/blue"
-
-# Uncomment one of them for the gfx desired, a image background or a gfxtheme
-#GRUB_BACKGROUND="/path/to/wallpaper"
+# Path to theme spec txt file.
+# The starfield is by default provided with use truetype.
+# NOTE: when enabling custom theme, ensure you have required font/etc.
 #GRUB_THEME="/boot/grub/themes/starfield/theme.txt"
 
-# Uncomment to get a beep at GRUB start
-#GRUB_INIT_TUNE="480 440 1"
+# Background image used on graphical terminal.
+# Can be in various bitmap formats.
+#GRUB_BACKGROUND="/boot/grub/mybackground.png"
 
-# Uncomment to make GRUB remember the last selection. This requires to
-# set 'GRUB_DEFAULT=saved' above.
-#GRUB_SAVEDEFAULT="false"
+# Uncomment if you don't want GRUB to pass "root=UUID=xxx" parameter to kernel
+#GRUB_DISABLE_LINUX_UUID=true
 
-GRUB_DISABLE_OS_PROBER="true"
+# Uncomment to disable generation of recovery mode menu entries
+#GRUB_DISABLE_RECOVERY=true
 
-GRUB_FONT="/boot/grub/unicode.pf2"
+# Uncomment to disable generation of the submenu and put all choices on
+# the top-level menu.
+# Besides the visual affect of no sub menu, this makes navigation of the
+# menu easier for a user who can't see the screen.
+#GRUB_DISABLE_SUBMENU=y
+
+# Uncomment to play a tone when the main menu is displayed.
+# This is useful, for example, to allow users who can't see the screen
+# to know when they can make a choice on the menu.
+#GRUB_INIT_TUNE="60 800 1"

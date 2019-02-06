@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+set -o nounset
+set -o pipefail
+
+connected() {
+    status="$(echo 'info 70:26:05:0D:3E:C3' | bluetoothctl | rg Connected | cut -f 2 -d ' ')"
+    if [ $status = 'no' ]; then
+        return 1
+    else
+        return 0
+    fi
+}
+
+if connected; then
+    echo 'disconnect 70:26:05:0D:3E:C3' | bluetoothctl
+    while connected; do
+        sleep 0.2
+    done
+    sleep 2
+fi
+
+echo 'connect 70:26:05:0D:3E:C3' | bluetoothctl
+while ! connected; do
+    sleep 0.2
+done
+sleep 2
+pacmd set-card-profile bluez_card.70_26_05_0D_3E_C3 a2dp_sink
+pactl set-default-sink bluez_sink.70_26_05_0D_3E_C3.a2dp_sink

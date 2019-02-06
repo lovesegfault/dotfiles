@@ -1,32 +1,27 @@
 #!usr/bin/zsh
 
-PATH=$PATH:/opt/intel/bin/
-PATH=$PATH:/opt/Xilinx/Vivado/2017.4/bin/ # Vivado/FPGA
-PATH=$HOME/bin:/usr/local/bin:$PATH # Self-compiled
-PATH="$HOME/.cargo/bin:$PATH" # Rust
-export PATH
+if [ -z $IN_NIX_SHELL ];then
+    PATH=$PATH:/sbin:/usr/sbin
+    PATH=$HOME/bin:$PATH # Self-compiled
+    PATH=$PATH:$HOME/.cargo/bin # Rust
+    export PATH
+fi
+
+if [ -z $LIBCLANG_PATH ]; then
+    LIBCLANG_PATH="/usr/lib/llvm/7/lib64"
+    export LIBCLANG_PATH
+fi
 
 SSH_KEY_PATH="$HOME/.ssh/id_rsa"
 GPG_TTY=$(tty)
 export SSH_KEY_PATH
 export GPG_TTY
 
-TERM=tmux-256color
-export TERM
-
-TMUX_PLUGIN_MANAGER_PATH="/Users/bemeurer/.tmux/plugins/"
-export TMUX_PLUGIN_MANAGER_PATH
+#TERM="tmux-256color"
+#export TERM
 
 XDG_CONFIG_HOME="$HOME/.config"
-XDG_RUNTIME_DIR="/run/user/$UID"
-DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
 export XDG_CONFIG_HOME
-export XDG_RUNTIME_DIR
-export DBUS_SESSION_BUS_ADDRESS
-
-FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules}/*" 2> /dev/null'
-export FZF_DEFAULT_COMMAND
-
 
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
@@ -39,13 +34,13 @@ EDITOR='nvim'
 export EDITOR
 
 # zplug
-ZPLUG_HOME=/usr/share/zsh/scripts/zplug
-fpath+=$HOME/.zfunc
+ZPLUG_HOME=$HOME/.zplug
 export ZPLUG_HOME
 source $ZPLUG_HOME/init.zsh
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 zplug "zdharma/fast-syntax-highlighting", defer:2
 zplug "voronkovich/gitignore.plugin.zsh"
+zplug "skywind3000/z.lua"
 zplug 'sei40kr/zsh-tmux-rename'
 zplug "zdharma/history-search-multi-word", defer:2
 zplug "zsh-users/zsh-history-substring-search", defer:2
@@ -55,13 +50,12 @@ zplug "hlissner/zsh-autopair", defer:2
 zplug "zpm-zsh/colors"
 zplug "hcgraf/zsh-sudo"
 zplug "plugins/colored-man-pages", from:oh-my-zsh
-zplug "plugins/archlinux", from:oh-my-zsh
-zplug "valentinocossar/sublime"
-zplug "srijanshetty/zsh-pip-completion"
+zplug "plugins/cargo", from:oh-my-zsh
+zplug "plugins/rust", from:oh-my-zsh
 zplug "chisui/zsh-nix-shell"
 zplug "spwhitt/nix-zsh-completions", defer:2
 # Load theme file
-#zplug 'agnoster/agnoster-zsh-theme', as:theme
+# zplug 'agnoster/agnoster-zsh-theme', as:theme
 zplug "chisui/0d12bd51a5fd8e6bb52e6e6a43d31d5e", from:gist, as:theme, use:agnoster-nix.zsh-theme
 zplug load
 
@@ -77,24 +71,23 @@ bindkey "^[[1;5C" forward-word
 bindkey "^[[1;3C" forward-word
 bindkey "^[[1;5D" backward-word
 bindkey "^[[1;3D" backward-word
-bindkey -s "^O" 'nvim $(fzf)^M'
+bindkey -s "^O" 'nvim $(sk -m)^M'
 
 # Some useful aliases
+## Use exa instead of ls proper
 alias l="exa -bhlF"
 alias ls="exa -bhlF"
 alias la="exa -bhlFa"
-alias reflect="sudo reflector --verbose --latest 200 --sort rate --save /etc/pacman.d/mirrorlist"
-alias -g toclip="| xclip -selection c"
-alias ..="cd .."
-alias ...="cd ..."
+## Neat trick to monitor sync
 alias sync="sync & watch -n 1 rg -e Dirty: /proc/meminfo"
-alias chkbd="/home/bemeurer/bin/chkbd.bash"
-alias screenshot="maim -m 10 -u ~/pictures/screenshots/$(date +%s).png"
-alias aurup="aur vercmp-devel | cut -d: -f1 | aur sync --chroot --upgrades --no-ver-shallow -"
-alias clippy="cargo clippy"
+## Wireguard
 alias wg="sudo wg"
-alias vim=nvim
-alias vi=nvim
+## Some utility aliases
+alias pip="pip3"
+alias vim="nvim"
+alias vi="nvim"
+alias pass="gopass"
+## Git
 alias ga="git add"
 alias gaa="git add -A"
 alias gap="git add --patch"
@@ -102,12 +95,13 @@ alias gaap="git add -A --patch"
 alias gc="git commit"
 alias gd="git difftool"
 alias gf="git fetch --prune"
-alias gl="git log"
-alias gs="git status"
+alias gl="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all"
+alias gs="git status --find-renames --show-stash"
 alias gm="git merge"
 alias gp="git push"
-alias gpl="git pull"
+alias gpl="git pull --rebase"
 alias gr="git rebase"
+## Cargo
 alias cb="cargo build"
 alias cc="cargo check"
 alias cdoc="cargo doc"
@@ -118,3 +112,12 @@ alias ccr="cargo check --release"
 alias cdocr="cargo doc --release"
 alias crr="cargo run --release"
 alias ctr="cargo test --release"
+## Portage
+alias cls="sudo emerge -av --depclean"
+alias upd="sudo emerge --sync"
+alias upg="sudo emerge -uDU --keep-going --with-bdeps=y @world"
+## z.lua
+alias zc='z -c'      # restrict matches to subdirs of $PWD
+alias zz='z -i'      # cd with interactive selection
+alias zf='z -I'      # use fzf to select in multiple matches
+alias zb='z -b'      # quickly cd to the parent directory
