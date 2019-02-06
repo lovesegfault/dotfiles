@@ -64,6 +64,7 @@ Plug 'gentoo/gentoo-syntax'
 Plug 'sukima/xmledit'
 Plug 'nfnty/vim-nftables'
 " ---- Utils
+Plug 'junegunn/goyo.vim'
 Plug 'flazz/vim-colorschemes'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'bronson/vim-trailing-whitespace'
@@ -268,6 +269,7 @@ let g:neosnippet#enable_completed_snippet = 1
 
 " ---- VimTeX
 let g:vimtex_view_method = 'zathura'
+let g:vimtex_compiler_progname = 'nvr'
 
 " ---- Airline
 let g:airline#extensions#tabline#enabled = 1

@@ -4,7 +4,7 @@ set -o nounset
 set -o pipefail
 
 connected() {
-    status="$(echo 'info 70:26:05:0D:3E:C3' | bluetoothctl | rg  Connected | cut -f 2 -d ' ')"
+    status="$(echo 'info 70:26:05:0D:3E:C3' | bluetoothctl | rg Connected | cut -f 2 -d ' ')"
     if [ $status = 'no' ]; then
         return 1
     else

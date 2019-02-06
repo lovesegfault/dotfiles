@@ -1,0 +1,281 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+function print_help() {
+    echo "USAGE: nker [KERNEL]"
+    echo ""
+    echo "Either specify a kernel, or nker will pick the default one (as per eselect kernel)"
+    echo "Kernel must match one of the following: "
+    eselect kernel list | tail -n +2 | cut -f 6 -d ' ' | awk '{ print "    ", $0; }'
+}
+
+function validate_kernel() {
+    # Matches WORD-NUM.NUM....-WORD
+    local kernel_version_regex='^([^\s]+)-([0-9]+([.][0-9]+)+)-([^\s]+)$'
+    if [[ "$1"  =~ $kernel_version_regex ]]; then
+        # Valid
+        return 0
+    else
+        # Invalid
+        return 1
+    fi
+}
+
+function check_kernel() {
+    # Searches for $1 in available kernel list
+    if eselect kernel list | tail -n +2 | cut -f 6 -d ' ' | grep -swq "$1"; then
+        # Found
+        return 0
+    else
+        # Not found
+        return 1
+    fi
+}
+
+function cprintf() {
+    # This requires the following arguments
+    # $color $string
+    if [ "$#" -ne 2 ]; then
+        progress "error" "INVALID USAGE OF 'color_print'\n"
+        progress "error" "PLEASE REPORT THIS TO A MAINTAINER\n"
+        exit 1
+    fi
+    local color
+    case "$1" in
+        black)
+            color=0
+            ;;
+        red)
+            color=1
+            ;;
+        green)
+            color=2
+            ;;
+        yellow)
+            color=3
+            ;;
+        blue)
+            color=4
+            ;;
+        magenta)
+            color=5
+            ;;
+        cyan)
+            color=6
+            ;;
+        white)
+            color=7
+            ;;
+        *)
+            progress "error" "INVALID COLOR '$1' PASSED TO 'cprintf'\n"
+            progress "error" "PLEASE REPORT THIS TO A MAINTAINER\n"
+            exit 1
+    esac
+    printf "%s$2%s" "$(tput setaf $color)" "$(tput sgr 0)"
+}
+
+function progress() {
+    # This requires the following arguments
+    # $type $message
+    # $type is one of: header; info; log; error
+    local scolor
+    local mstart
+    local mcolor
+    local mtype
+    case "$1" in
+        header)
+            scolor="green"
+            mstart="$(tput bold)>>>> $(tput sgr 0)"
+            mcolor="white"
+            mtype="$(tput bold)"
+            ;;
+        info)
+            scolor="cyan"
+            mstart=">>>> "
+            mcolor="white"
+            mtype=""
+            ;;
+        log)
+            scolor="cyan"
+            mstart=">>>> "
+            mcolor="blue"
+            mtype="$(tput dim)"
+            ;;
+        error)
+            scolor="red"
+            mstart="$(tput bold)>>>> $(tput sgr 0)"
+            mcolor="red"
+            mtype="$(tput bold)$(tput smul)"
+            ;;
+        *)
+            progress "error" "INVALID TYPE '$1' PASSED TO 'progress'\n"
+            progress "error" "PLEASE REPORT THIS TO A MAINTAINER\n"
+            exit 1
+    esac
+    cprintf "$scolor" "$mstart"
+    cprintf "$mcolor" "$mtype$2$(tput sgr 0)"
+}
+
+function check_config() {
+    # This requires the following argument:
+    # kernel version being built
+    # kver
+    local kver
+    kver="$1"
+    local cfg_kver
+    cfg_kver="linux-$(head -n4 < .config | grep 'Linux' | cut -f 3 -d ' ')"
+    if [ "$kver" == "$cfg_kver" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+function ncpu() {
+    awk '/^processor/{print $3}' /proc/cpuinfo | wc -l
+}
+
+function print_ok() {
+    printf "%s✓%s\n" "$(tput setaf 2)$(tput bold)" "$(tput sgr 0)"
+}
+
+spinner() {
+    local pid=$!
+    local delay=0.2
+    local sp="|/-\\"
+    local n=${#sp}
+    local i=0
+    printf '  '
+    while ps a | awk '{print $1}' | grep -q $pid; do
+        printf "\b%s" "${sp:i++%n:1}"
+        sleep $delay
+    done
+    printf "\b"
+    print_ok
+}
+
+# START
+
+# Kill all subprocess
+trap 'kill $(jobs -p) > /dev/null 2>&1' EXIT
+
+# Ensures user is running script as root.
+if [ "$(id -u)" != "0" ]; then
+    # If not root complain and exit.
+    progress "error"  "Please run nker as root\n"
+    exit 1
+fi
+
+# Use input or default set kernel
+if [ "$#" -eq 1 ]; then
+    # Using user input
+    # Validate input
+    if ! validate_kernel "$1"; then
+        # Invalid kernel version
+        progress "error" "Invalid kernel version '$1'\n"
+        echo ""
+        print_help
+        exit 1
+    fi
+    # Input is valid
+    kernel="$1"
+elif [ "$#" -gt 1 ]; then
+    # Invalid usage
+    print_help
+    exit 1
+else
+    # Using eselected kernel
+    kernel_temp="$(eselect kernel show | tail -n1 | cut -f 4 -d '/')"
+    # Validate detected kernel
+    if ! validate_kernel "$kernel_temp"; then
+        # Invalid kernel version
+        progress "error" "Uh-oh, something went wrong selecting the default kernel\n"
+        progress "error" "Output of 'eselect kernel show | tail -n1 | cut -f 4 -d '/'' = $kernel_temp\n"
+        progress "error" "Please contact the maintainer with the above information\n"
+        exit 1
+    fi
+    kernel="$kernel_temp"
+fi
+
+# Check that selected kernel version exists
+if ! check_kernel "$kernel"; then
+    progress "error" "The selected kernel '$kernel' does not exist\n"
+    echo ""
+    print_help
+    exit 1
+fi
+
+kernel_path="/usr/src/$kernel"
+# Check that the kernel path exists
+if [ ! -d "$kernel_path" ]; then
+    progress "error" "Uh-oh, it seems like the source directory '$kernel_path' for the selected kernel '$kernel'\n"
+    progress "error" "does not exist, even though eselect-kernel reports it as available!\n"
+    progress "error" "Something is weird with your system. Please investigate.\n"
+    print_help
+    exit 1
+fi
+
+# Begin process
+renice -n 19 $$ > /dev/null 2>&1
+progress "header" "Using $kernel\n"
+
+# Build the kernel
+cores="$(ncpu)"
+
+pushd /usr/src/linux > /dev/null 2>&1 || exit 1
+progress "header" "Beginning kernel build\n"
+
+# progress "log" "Using $cores cores\n"
+if ! check_config "$kernel"; then
+    progress "info" "Running oldconfig\n"
+    make -j"$cores" oldconfig
+else
+    progress "info" "Config already up-to-date "
+    print_ok
+fi
+
+#progress "info" "Running clean"
+#make -j"$cores" clean > /dev/null 2>&1 &
+#spinner
+
+progress "info" "Building bzImage"
+make -j"$cores" bzImage > /dev/null 2>&1 &
+spinner
+
+progress "info" "Building modules"
+make -j"$cores" modules > /dev/null 2>&1 &
+spinner
+
+progress "info" "Installing kernel"
+make -j"$cores" install > /dev/null 2>&1 &
+spinner
+
+progress "info" "Installing modules"
+make -j"$cores" modules_install > /dev/null 2>&1 &
+spinner
+popd > /dev/null 2>&1 || exit 1
+
+# Update modules
+progress "info" "Rebuilding external modules"
+emerge @module-rebuild > /dev/null 2>&1 &
+spinner
+
+# Build the initrd
+progress "info" "Creating initrd"
+dracut --hostonly --force > /dev/null 2>&1 &
+spinner
+
+# Clean old files
+progress "info" "Cleaning old files "
+find "/boot" -maxdepth 1 -name \*.old -type f -delete
+print_ok
+
+# Update Grub
+progress "info" "Updating grub "
+grub-mkconfig -o /boot/grub/grub.cfg > /dev/null 2>&1
+print_ok
+
+progress "header" "Done!\n"
