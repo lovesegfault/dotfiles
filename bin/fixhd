@@ -12,18 +12,28 @@ connected() {
     fi
 }
 
+bt_cmd() {
+    echo "$1" | bluetoothctl
+}
+
 if connected; then
-    echo 'disconnect 70:26:05:0D:3E:C3' | bluetoothctl
+    bt_cmd 'disconnect 70:26:05:0D:3E:C3'
     while connected; do
         sleep 0.2
     done
     sleep 2
 fi
 
-echo 'connect 70:26:05:0D:3E:C3' | bluetoothctl
+sudo systemctl stop bluetooth.service
+sudo rmmod btusb
+sudo modprobe btusb
+sudo systemctl start bluetooth.service
+sleep 2
+bt_cmd 'default-agent'
+bt_cmd 'power on'
+bt_cmd 'connect 70:26:05:0D:3E:C3'
+
 while ! connected; do
     sleep 0.2
 done
 sleep 2
-pacmd set-card-profile bluez_card.70_26_05_0D_3E_C3 a2dp_sink
-pactl set-default-sink bluez_sink.70_26_05_0D_3E_C3.a2dp_sink

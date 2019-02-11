@@ -159,10 +159,8 @@ spinner() {
 
 # START
 
-logfile="/tmp/nker.log"
-
 # Kill all subprocess
-trap 'kill $(jobs -p) > $logfile 2>&1' EXIT
+trap 'kill $(jobs -p) > /dev/null 2>&1' EXIT
 
 # Ensures user is running script as root.
 if [ "$(id -u)" != "0" ]; then
@@ -221,13 +219,13 @@ if [ ! -d "$kernel_path" ]; then
 fi
 
 # Begin process
-renice -n 19 $$ > $logfile 2>&1
+renice -n 19 $$ > /dev/null 2>&1
 progress "header" "Using $kernel\n"
 
 # Build the kernel
 cores="$(ncpu)"
 
-pushd /usr/src/$kernel > $logfile 2>&1 || exit 1
+pushd /usr/src/$kernel > /dev/null 2>&1 || exit 1
 progress "header" "Beginning kernel build\n"
 
 # progress "log" "Using $cores cores\n"
@@ -240,37 +238,30 @@ else
 fi
 
 #progress "info" "Running clean"
-#make -j"$cores" clean > $logfile 2>&1 &
+#make -j"$cores" clean > /dev/null 2>&1 &
 #spinner
 
 progress "info" "Building bzImage"
-make -j"$cores" bzImage > $logfile 2>&1 &
-spinner
+make -j"$cores" bzImage
 
 progress "info" "Building modules"
-make -j"$cores" modules > $logfile 2>&1 &
-spinner
+make -j"$cores" modules
 
 progress "info" "Installing kernel"
-make -j"$cores" install > $logfile 2>&1 &
-spinner
+make -j"$cores" install
 
 progress "info" "Installing modules"
-make -j"$cores" modules_install > $logfile 2>&1 &
-spinner
-popd > $logfile 2>&1 || exit 1
+make -j"$cores" modules_install 
+popd > /dev/null 2>&1 || exit 1
 
 # Update modules
-progress "info" "Rebuilding external modules"
-emerge @module-rebuild > $logfile 2>&1 &
-spinner
-
+#progress "info" "Rebuilding external modules"
+#emerge @module-rebuild
 
 # Build the initrd
 progress "info" "Creating initrd"
 dracut_kver="$(echo $kernel | cut -f 2- -d '-')"
-dracut --force '' "$dracut_kver" > $logfile 2>&1 &
-spinner
+dracut --force '' "$dracut_kver" 
 
 # Clean old files
 progress "info" "Cleaning old files "
@@ -278,8 +269,8 @@ find "/boot" -maxdepth 1 -name \*.old -type f -delete
 print_ok
 
 # Update Grub
-progress "info" "Updating grub "
-grub-mkconfig -o /boot/grub/grub.cfg > $logfile 2>&1
-print_ok
+#progress "info" "Updating grub "
+#grub-mkconfig -o /boot/grub/grub.cfg > /dev/null 2>&1
+#print_ok
 
 progress "header" "Done!\n"

@@ -3,23 +3,24 @@
 set -o nounset
 set -o pipefail
 
-cp -f ~/.config/alacritty/alacritty.yml ./alacritty.yml
-cp -f /etc/fstab ./
-cp -f /etc/default/grub ./grub
+rsync -Pav ~/.config/alacritty/alacritty.yml ./alacritty.yml
+rsync -Pav /etc/fstab ./fstab
+rsync -Pav /etc/default/grub ./grub
 
-cp -f ~/.config/i3/config ./i3.config
-cp -f ~/.config/i3status-rs.toml ./i3status-rs.toml
+rsync -Pav ~/.config/i3/config ./i3.config
+rsync -Pav ~/.config/i3status-rs.toml ./i3status-rs.toml
 
-cp -f ~/.config/nvim/init.vim ./init.vim
-cp -f ~/.tmux.conf ./tmux.conf
-cp -f /etc/vconsole.conf ./vconsole.conf
-cp -f ~/.xinitrc ./xinitrc
-cp -f ~/.Xresources ./Xresources
-cp -f ~/.zshrc ./zshrc
-cp -r ~/bin ./
+rsync -Pav ~/.config/nvim/init.vim ./init.vim
+rsync -Pav ~/.tmux.conf ./tmux.conf
+rsync -Pav /etc/vconsole.conf ./vconsole.conf
+rsync -Pav ~/.xinitrc ./xinitrc
+rsync -Pav ~/.Xresources ./Xresources
+rsync -Pav ~/.zshrc ./zshrc
+rsync -Pav --no-links ~/bin ./
 
-cp -f /etc/genkernel.conf ./genkernel.conf
-cp -f /etc/portage/make.conf ./make.conf
-cp -f /usr/src/linux/.config ./kernel.config
-cp -r ~/pictures/walls ./
+rsync -Pav /etc/dracut.conf ./dracut.conf
+rsync -Pav /etc/genkernel.conf ./genkernel.conf
+rsync -Pav /etc/portage/make.conf ./make.conf
+rsync -Pav /usr/src/linux/.config ./kernel.config
+rsync -Pav ~/pictures/walls ./
 

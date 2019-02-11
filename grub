@@ -13,13 +13,13 @@ GRUB_DISTRIBUTOR="Gentoo"
 # Default menu entry
 GRUB_DEFAULT=0
 # Boot the default entry this many seconds after the menu is displayed
-GRUB_TIMEOUT=0
-#GRUB_TIMEOUT_STYLE=menu
+GRUB_TIMEOUT=3
+GRUB_TIMEOUT_STYLE=menu
 GRUB_RECORDFAIL_TIMEOUT=$GRUB_TIMEOUT
 
 # Append parameters to the linux kernel command line
 #GRUB_CMDLINE_LINUX="dobtrfs crypt_root=UUID=ac2c4f5a-0ccb-4dff-8534-65ab32419775 real_root=/dev/mapper/root rootfstype=btrfs rw nvidia.modeset=0"
-GRUB_CMDLINE_LINUX="root=UUID=ac4187a5-5310-40c2-adb0-b16428c788a4 rd.luks.uuid=03ee01a0-0bc1-4bdf-b85b-15b3aae70c07 rootfstype=btrfs rw nvidia.modeset=0"
+GRUB_CMDLINE_LINUX="root=UUID=ac4187a5-5310-40c2-adb0-b16428c788a4 rd.luks.uuid=03ee01a0-0bc1-4bdf-b85b-15b3aae70c07 rootfstype=btrfs rw rd.shell"
 #
 # Examples:
 #
@@ -30,7 +30,7 @@ GRUB_CMDLINE_LINUX="root=UUID=ac4187a5-5310-40c2-adb0-b16428c788a4 rd.luks.uuid=
 # GRUB_CMDLINE_LINUX="init=/usr/lib/systemd/systemd"
 
 # Append parameters to the linux kernel command line for non-recovery entries
-GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=2 i915.fastboot=1 vga=current rd.systemd.show_status=auto rd.udev.log_priority=3"
+GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=2 i915.fastboot=1 nvidia.modeset=0 vga=current rd.systemd.show_status=auto rd.udev.log_priority=3"
 
 # Uncomment to disable graphical terminal (grub-pc only)
 #GRUB_TERMINAL=console

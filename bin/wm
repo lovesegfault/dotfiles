@@ -4,20 +4,23 @@ echo "-------------------------" >> ~/.sway.log
 echo "$(timedatectl | rg -i "local time" | cut -f 2- -d ':')" >> ~/.sway.log
 echo "-------------------------" >> ~/.sway.log
 
-
-eval "$(systemctl --user show-environment)"
-
-if [ -x /usr/bin/gpg-agent ]; then
- eval "$(/usr/bin/gpg-agent --daemon)"
-fi
-
-eval "$(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh,gpg)"
+echo "Updating dbus"
+eval "$(dbus-launch)"
+export DBUS_SESSION_BUS_ADDRESS
+export DBUS_SESSION_BUS_PID
 dbus-update-activation-environment --all >> ~/.sway.log 2>&1
 
-echo 'power on' | bluetoothctl
+echo "Setting systemd vars"
+eval "$(systemctl --user show-environment)"
 
+echo "Starting gnome-keyring"
+eval "$(/usr/bin/gnome-keyring-daemon --daemonize --start --components=pkcs11,secrets,ssh,gpg)"
+
+echo "Starting polkit-gnome"
+/usr/libexec/polkit-gnome-authentication-agent-1 &
+
+echo "Exporting envvars"
 export SSH_AUTH_SOCK
-export DBUS_SESSION_BUS_ADDRESS
 
 # qt
 export QT_QPA_PLATFORM=wayland
@@ -30,7 +33,9 @@ export ECORE_EVAS_ENGINE=wayland_egl
 export ELM_ENGINE=wayland_egl
 # sdl
 export SDL_VIDEODRIVER=wayland
+#gnome
+export XDG_CURRENT_DESKTOP=GNOME
+export DESKTOP_SESSION=gnome
 
-sway & >> ~/.sway.log 2>&1
-
-/usr/libexec/polkit-gnome-authentication-agent-1 &
+echo "Starting sway"
+exec sway >> ~/.sway.log 2>&1
