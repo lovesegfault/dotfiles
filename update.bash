@@ -7,6 +7,9 @@ rsync -Pav ~/.config/alacritty/alacritty.yml ./alacritty.yml
 rsync -Pav /etc/fstab ./fstab
 rsync -Pav /etc/default/grub ./grub
 
+rsync -Pav ~/.config/sway/config ./sway.config
+rsync -Pav ~/.config/rofi/config ./rofi.config
+
 rsync -Pav ~/.config/i3/config ./i3.config
 rsync -Pav ~/.config/i3status-rs.toml ./i3status-rs.toml
 

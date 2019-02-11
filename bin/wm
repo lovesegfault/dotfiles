@@ -16,9 +16,6 @@ eval "$(systemctl --user show-environment)"
 echo "Starting gnome-keyring"
 eval "$(/usr/bin/gnome-keyring-daemon --daemonize --start --components=pkcs11,secrets,ssh,gpg)"
 
-echo "Starting polkit-gnome"
-/usr/libexec/polkit-gnome-authentication-agent-1 &
-
 echo "Exporting envvars"
 export SSH_AUTH_SOCK
 
