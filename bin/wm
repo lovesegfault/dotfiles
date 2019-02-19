@@ -4,21 +4,20 @@ echo "-------------------------" >> ~/.sway.log
 echo "$(timedatectl | rg -i "local time" | cut -f 2- -d ':')" >> ~/.sway.log
 echo "-------------------------" >> ~/.sway.log
 
-echo "Updating dbus"
-eval "$(dbus-launch)"
-export DBUS_SESSION_BUS_ADDRESS
-export DBUS_SESSION_BUS_PID
-dbus-update-activation-environment --all >> ~/.sway.log 2>&1
-
 echo "Setting systemd vars"
 eval "$(systemctl --user show-environment)"
 
+DISPLAY=':0'
+dbus-update-activation-environment --all >> ~/.sway.log 2>&1
+
 echo "Starting gnome-keyring"
 eval "$(/usr/bin/gnome-keyring-daemon --daemonize --start --components=pkcs11,secrets,ssh,gpg)"
+export SSH_AUTH_SOCK
+export GPG_AGENT_INFO
+export GNOME_KEYRING_CONTROL
+export GNOME_KEYRING_PID
 
 echo "Exporting envvars"
-export SSH_AUTH_SOCK
-
 # qt
 export QT_QPA_PLATFORM=wayland
 export QT_WAYLAND_FORCE_DPI=physical

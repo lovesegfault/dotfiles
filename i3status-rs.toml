@@ -4,6 +4,11 @@ icons = "awesome"
 name = "solarized-dark"
 
 [[block]]
+player = "Lollypop"
+block = "music"
+buttons = ["play", "next"]
+
+[[block]]
 block = "sound"
 
 [[block]]
@@ -43,7 +48,7 @@ interval = 1
 
 [[block]]
 block = "temperature"
-collapsed = false
+collapsed = true
 interval = 5
 
 [[block]]

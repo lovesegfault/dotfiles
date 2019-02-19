@@ -13,7 +13,7 @@ GRUB_DISTRIBUTOR="Gentoo"
 # Default menu entry
 GRUB_DEFAULT=0
 # Boot the default entry this many seconds after the menu is displayed
-GRUB_TIMEOUT=3
+GRUB_TIMEOUT=2
 GRUB_TIMEOUT_STYLE=menu
 GRUB_RECORDFAIL_TIMEOUT=$GRUB_TIMEOUT
 
@@ -31,6 +31,11 @@ GRUB_CMDLINE_LINUX="root=UUID=ac4187a5-5310-40c2-adb0-b16428c788a4 rd.luks.uuid=
 
 # Append parameters to the linux kernel command line for non-recovery entries
 GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=2 i915.fastboot=1 nvidia.modeset=0 vga=current rd.systemd.show_status=auto rd.udev.log_priority=3"
+
+
+# Use a custom font, converted using grub-mkfont utility
+GRUB_FONT="/boot/grub/fonts/hack24.pf2"
+
 
 # Uncomment to disable graphical terminal (grub-pc only)
 #GRUB_TERMINAL=console

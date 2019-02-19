@@ -28,7 +28,7 @@ sudo systemctl stop bluetooth.service
 sudo rmmod btusb
 sudo modprobe btusb
 sudo systemctl start bluetooth.service
-sleep 2
+sleep 1
 bt_cmd 'default-agent'
 bt_cmd 'power on'
 bt_cmd 'connect 70:26:05:0D:3E:C3'

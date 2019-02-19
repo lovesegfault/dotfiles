@@ -17,9 +17,6 @@ GPG_TTY=$(tty)
 export SSH_KEY_PATH
 export GPG_TTY
 
-#TERM="tmux-256color"
-#export TERM
-
 XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CONFIG_HOME
 
@@ -32,6 +29,9 @@ export SAVEHIST
 
 EDITOR='nvim'
 export EDITOR
+
+CCACHE_DIR="/gentoo/ccache"
+export CCACHE_DIR
 
 # zplug
 ZPLUG_HOME=$HOME/.zplug
