@@ -1,12 +1,7 @@
 icons = "awesome"
 
 [theme]
-name = "solarized-dark"
-
-[[block]]
-player = "Lollypop"
-block = "music"
-buttons = ["play", "next"]
+name = "slick"
 
 [[block]]
 block = "sound"
