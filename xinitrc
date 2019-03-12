@@ -1,15 +1,12 @@
-if [ -x /usr/bin/gpg-agent ]; then
- eval "$(/usr/bin/gpg-agent --daemon)"
-fi
-
+eval "$(systemctl --user show-environment)"
+dbus-update-activation-environment --all
+eval "$(/usr/bin/gnome-keyring-daemon --daemonize --start --components=pkcs11,secrets,ssh,gpg)"
 export SSH_AUTH_SOCK
-
-eval "$(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh,gpg)"
-/usr/libexec/polkit-gnome-authentication-agent-1 &
-echo 'power on' | /usr/bin/bluetoothctl
-dbus-update-activation-environment --systemd DISPLAY
+export GPG_AGENT_INFO
+export GNOME_KEYRING_CONTROL
+export GNOME_KEYRING_PID
+export XDG_CURRENT_DESKTOP=GNOME
 export DESKTOP_SESSION=gnome
-numlockx &
 
 xrdb -merge ~/.Xresources
 exec i3

@@ -30,7 +30,7 @@ GRUB_CMDLINE_LINUX="root=UUID=ac4187a5-5310-40c2-adb0-b16428c788a4 rd.luks.uuid=
 # GRUB_CMDLINE_LINUX="init=/usr/lib/systemd/systemd"
 
 # Append parameters to the linux kernel command line for non-recovery entries
-GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=2 i915.fastboot=1 nvidia.modeset=0 vga=current rd.systemd.show_status=auto rd.udev.log_priority=3"
+GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=2 rd.systemd.show_status=auto rd.udev.log_priority=3 i915.fastboot=1 nvidia.modeset=0 vga=current intel_iommu=on"
 
 
 # Use a custom font, converted using grub-mkfont utility

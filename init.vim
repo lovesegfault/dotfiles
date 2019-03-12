@@ -52,6 +52,7 @@ Plug 'lnl7/vim-nix'
 Plug 'gentoo/gentoo-syntax'
 Plug 'sukima/xmledit'
 Plug 'nfnty/vim-nftables'
+Plug 'derekelkins/agda-vim'
 " ---- Utils
 Plug 'junegunn/goyo.vim'
 Plug 'flazz/vim-colorschemes'

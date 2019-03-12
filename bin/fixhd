@@ -16,13 +16,13 @@ bt_cmd() {
     echo "$1" | bluetoothctl
 }
 
-if connected; then
-    bt_cmd 'disconnect 70:26:05:0D:3E:C3'
-    while connected; do
-        sleep 0.2
-    done
-    sleep 2
-fi
+#if connected; then
+#    bt_cmd 'disconnect 70:26:05:0D:3E:C3'
+#    while connected; do
+#        sleep 0.2
+#    done
+#    sleep 2
+#fi
 
 sudo systemctl stop bluetooth.service
 sudo rmmod btusb
