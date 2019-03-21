@@ -4,6 +4,7 @@ if [ -z $IN_NIX_SHELL ];then
     PATH=$PATH:/sbin:/usr/sbin
     PATH=$HOME/bin:$PATH # Self-compiled
     PATH=$PATH:$HOME/.cargo/bin # Rust
+    PATH=$PATH:$HOME/.local/bin  # Pip
     export PATH
 fi
 
@@ -63,8 +64,6 @@ zplug load
 bindkey "${terminfo[khome]}" beginning-of-line
 bindkey "${terminfo[kend]}" end-of-line
 bindkey "${terminfo[kdch1]}" delete-char
-#bindkey "${terminfo[kcuu1]}" history-substring-search-up
-#bindkey "${terminfo[kcud1]}" history-substring-search-down
 bindkey "^[[A" history-substring-search-up
 bindkey "^[[B" history-substring-search-down
 bindkey "^[[1;5C" forward-word

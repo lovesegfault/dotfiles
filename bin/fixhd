@@ -28,6 +28,7 @@ sudo systemctl stop bluetooth.service
 sudo rmmod btusb
 sudo modprobe btusb
 sudo systemctl start bluetooth.service
+rfkill unblock bluetooth
 sleep 1
 bt_cmd 'default-agent'
 bt_cmd 'power on'
