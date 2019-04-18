@@ -34,6 +34,9 @@ export EDITOR
 CCACHE_DIR="/gentoo/ccache"
 export CCACHE_DIR
 
+SPACESHIP_PROMPT_ADD_NEWLINE=false
+SPACESHIP_PROMPT_SEPARATE_LINE=false
+
 # zplug
 ZPLUG_HOME=$HOME/.zplug
 export ZPLUG_HOME
@@ -57,7 +60,8 @@ zplug "chisui/zsh-nix-shell"
 zplug "spwhitt/nix-zsh-completions", defer:2
 # Load theme file
 # zplug 'agnoster/agnoster-zsh-theme', as:theme
-zplug "chisui/0d12bd51a5fd8e6bb52e6e6a43d31d5e", from:gist, as:theme, use:agnoster-nix.zsh-theme
+#zplug "chisui/0d12bd51a5fd8e6bb52e6e6a43d31d5e", from:gist, as:theme, use:agnoster-nix.zsh-theme
+zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, as:theme
 zplug load
 
 # keybinds

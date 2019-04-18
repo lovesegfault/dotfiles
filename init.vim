@@ -11,8 +11,7 @@ Plug 'autozimu/LanguageClient-neovim', {
 Plug 'tpope/vim-fugitive'
 " --- Completion/intellisense
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'zchee/deoplete-clang'
-Plug 'zchee/deoplete-jedi'
+Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
 Plug 'juliaeditorsupport/deoplete-julia'
 Plug 'wellle/tmux-complete.vim'
 Plug 'ervandew/supertab'

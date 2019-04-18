@@ -13,5 +13,8 @@ UUID=1A5C-974C                              /boot               vfat        defa
 # Mapped BTRFS rootfs
 UUID=ac4187a5-5310-40c2-adb0-b16428c788a4   /                   btrfs       rw,noatime,compress=lzo                             0 2
 
+# Swap file
+/dev/swap                                   none                swap        sw,loop                                             0 0
+
 # TMPDIR
 tmpfs                                       /var/tmp/portage    tmpfs       size=12G,uid=portage,gid=portage,mode=775,noatime   0 0

@@ -11,4 +11,5 @@ password=$(printf '%s\n' "${password_files[@]}" | rofi -dmenu)
 
 [[ -n $password ]] || exit
 
-gopass -c "$password" 2>/dev/null
+gopass "$password" | head -n 1 | xclip -sel c 2>/dev/null
+gopass "$password" | head -n 1 | wl-copy 2>/dev/null

@@ -4,10 +4,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-slurp=/home/bemeurer/src/slurp/build/slurp
-grim=/home/bemeurer/src/grim/build/grim
+slurp=/home/bemeurer/bin/slurp
+grim=/home/bemeurer/bin/grim
 
-output=$(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name')
-geometry=$($slurp)
-
-$grim -o "${output}" -g "${geometry}" - | wl-copy
+$grim  -g "$($slurp)" - | wl-copy
