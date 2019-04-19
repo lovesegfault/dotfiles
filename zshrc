@@ -87,8 +87,6 @@ alias sync="sync & watch -n 1 rg -e Dirty: /proc/meminfo"
 alias wg="sudo wg"
 ## Some utility aliases
 alias pip="pip3"
-alias vim="nvim"
-alias vi="nvim"
 alias pass="gopass"
 ## Git
 alias ga="git add"
