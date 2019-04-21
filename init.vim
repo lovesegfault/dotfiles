@@ -1,47 +1,40 @@
 " Plugins
-if &compatible
-    set nocompatible
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
-" Add the dein installation directory into runtimepath
-set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
 
-if dein#load_state('~/.cache/dein')
-    call dein#begin('~/.cache/dein')
-
-    call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
-    call dein#add('wsdjeg/dein-ui.vim')
-    " ------------------------------------------------------------------------
-    call dein#add('ayu-theme/ayu-vim')
-    call dein#add('bronson/vim-trailing-whitespace')
-    call dein#add('flazz/vim-colorschemes')
-    call dein#add('gentoo/gentoo-syntax')
-    call dein#add('junegunn/goyo.vim')
-    call dein#add('lervag/vimtex')
-    call dein#add('lnl7/vim-nix')
-    call dein#add('lotabout/skim', {'merged':0, 'build':'./install'})
-    call dein#add('lotabout/skim.vim', {'depends':'skim'})
-    call dein#add('luochen1990/rainbow')
-    call dein#add('majutsushi/tagbar')
-    call dein#add('mattn/gist-vim')
-    call dein#add('mattn/webapi-vim')
-    call dein#add('nathanaelkane/vim-indent-guides')
-    call dein#add('neoclide/coc.nvim', {'merged':0, 'build': './install.sh nightly'})
-    call dein#add('nfnty/vim-nftables')
-    call dein#add('potatoesmaster/i3-vim-syntax')
-    call dein#add('qnighy/lalrpop.vim')
-    call dein#add('rust-lang/rust.vim')
-    call dein#add('scrooloose/nerdtree')
-    call dein#add('terryma/vim-multiple-cursors')
-    call dein#add('tpope/vim-fugitive')
-    call dein#add('tpope/vim-surround')
-    call dein#add('vim-airline/vim-airline')
-    call dein#add('vim-airline/vim-airline-themes')
-    call dein#add('wellle/tmux-complete.vim')
-    call dein#add('zxqfl/tabnine-vim')
-    " ------------------------------------------------------------------------
-    call dein#end()
-    call dein#save_state()
-endif
+call plug#begin('~/.local/share/nvim/plugged')
+Plug 'ayu-theme/ayu-vim'
+Plug 'bronson/vim-trailing-whitespace'
+Plug 'flazz/vim-colorschemes'
+Plug 'gentoo/gentoo-syntax'
+Plug 'junegunn/goyo.vim'
+Plug 'lervag/vimtex'
+Plug 'lnl7/vim-nix'
+Plug 'lotabout/skim', {'do':'./install'}
+Plug 'lotabout/skim.vim'
+Plug 'luochen1990/rainbow'
+Plug 'majutsushi/tagbar'
+Plug 'mattn/gist-vim'
+Plug 'mattn/webapi-vim'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'neoclide/coc.nvim', {'do':{-> coc#util#install()}}
+Plug 'nfnty/vim-nftables'
+Plug 'potatoesmaster/i3-vim-syntax'
+Plug 'qnighy/lalrpop.vim'
+Plug 'rust-lang/rust.vim'
+Plug 'scrooloose/nerdtree'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'vim-scripts/Improved-AnsiEsc'
+Plug 'wellle/tmux-complete.vim'
+Plug 'zxqfl/tabnine-vim'
+call plug#end()
 
 " Settings
 " ---- Line numbers
@@ -186,11 +179,12 @@ nnoremap <C-p> :Files<CR>
 set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
 command -nargs=+ -complete=file -bar Rg silent! grep! <args>|cwindow|redraw!
 " ---- wellle/tmux-complete.vim
-let g:tmuxcomplete#trigger = ''
+"let g:tmuxcomplete#trigger = ''
 " ---- lervag/vimtex
 let g:vimtex_view_method = 'zathura'
 " ---- vim-airline/vim-airline
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tagbar#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline_highlighting_cache = 1
 let g:airline#extensions#ale#enabled = 1
