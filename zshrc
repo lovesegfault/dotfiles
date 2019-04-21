@@ -29,7 +29,10 @@ export HISTSIZE
 export SAVEHIST
 
 EDITOR='nvim'
+PAGER='vimpager'
 export EDITOR
+export PAGER
+
 
 CCACHE_DIR="/gentoo/ccache"
 export CCACHE_DIR
@@ -77,6 +80,9 @@ bindkey "^[[1;3D" backward-word
 bindkey -s "^O" 'nvim $(sk -m)^M'
 
 # Some useful aliases
+## Use bat instead of cat
+alias cat="bat"
+alias b="bat"
 ## Use exa instead of ls proper
 alias l="exa -bhlF"
 alias ls="exa -bhlF"
@@ -87,6 +93,8 @@ alias sync="sync & watch -n 1 rg -e Dirty: /proc/meminfo"
 alias wg="sudo wg"
 ## Some utility aliases
 alias pip="pip3"
+alias vim="nvim"
+alias vi="nvim"
 alias pass="gopass"
 ## Git
 alias ga="git add"
