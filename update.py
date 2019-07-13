@@ -4,8 +4,10 @@ import os
 import platform
 from logzero import logger
 from pathlib import Path
+from subprocess import check_output
 
 home_dir = Path(os.environ['HOME'])
+script_dir = Path(os.path.dirname(os.path.realpath(__file__)))
 system = platform.system()
 
 
@@ -66,13 +68,14 @@ root_mapping = {
     "kernel": None
 }
 
-def rsync_copy(src, dst):
-    cmd = "rsync -Pav {} {}".format(src, dst)
+def rsync_copy_update(src, dst):
+    cmd = ["rsync" "-Pav" "--no-links" "--delete" "--dry-run" src/"" dst/""]
     logger.debug(cmd)
-    os.system(cmd)
+    output = check_output([cmd])
+    logger.debug(output)
 
 def handle_copy(src, dst):
-    rsync_copy(src,dst)
+    rsync_copy_update(src,dst)
 
 
 def handle_mapping(mapping):
@@ -90,7 +93,4 @@ for key in root_mapping:
         handle_copy(value, key)
     else:
         logger.info("Skipping {}".format(key))
-
-
-
 
