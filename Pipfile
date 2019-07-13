@@ -14,3 +14,4 @@ beautysh = "*"
 [dev-packages]
 
 pylint = "*"
+jedi = "*"
