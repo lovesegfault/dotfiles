@@ -1,20 +1,20 @@
 #!/bin/bash
-echo "Setting systemd vars"
+#echo "Setting systemd vars"
 eval "$(systemctl --user show-environment)"
 
 DISPLAY=':0'
 dbus-update-activation-environment --all >> /dev/null 2>&1
 
-echo "Starting polkit-gnome"
+#echo "Starting polkit-gnome"
 /usr/libexec/polkit-gnome-authentication-agent-1 &
-echo "Starting gnome-keyring"
+#echo "Starting gnome-keyring"
 eval "$(/usr/bin/gnome-keyring-daemon --daemonize --start --components=pkcs11,secrets,ssh,gpg)"
 export SSH_AUTH_SOCK
 export GPG_AGENT_INFO
 export GNOME_KEYRING_CONTROL
 export GNOME_KEYRING_PID
 
-echo "Exporting envvars"
+#echo "Exporting envvars"
 # qt
 export QT_QPA_PLATFORM=wayland
 export QT_WAYLAND_FORCE_DPI=physical
@@ -29,6 +29,16 @@ export SDL_VIDEODRIVER=wayland
 #gnome
 export XDG_CURRENT_DESKTOP=GNOME
 export DESKTOP_SESSION=gnome
+#ff
+export MOZ_ENABLE_WAYLAND=1
 
-echo "Starting sway"
-exec sway >> /dev/null 2>&1
+#echo "Starting sway"
+cards="$(ls /dev/dri | rg card | awk 'NF{print $NF}')"
+while read -r card; do
+    info="$(udevadm info -a /dev/dri/${card})"
+    if rg -q "i915" <<< "$info"; then
+        export WLR_DRM_DEVICES="/dev/dri/${card}"
+    fi
+done <<< $cards
+
+exec sway --my-next-gpu-wont-be-nvidia >> /dev/null 2>&1

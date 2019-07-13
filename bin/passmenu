@@ -7,9 +7,11 @@ password_files=( "$prefix"/**/*.gpg )
 password_files=( "${password_files[@]#"$prefix"/}" )
 password_files=( "${password_files[@]%.gpg}" )
 
-password=$(printf '%s\n' "${password_files[@]}" | rofi -dmenu)
+password=$(printf '%s\n' "${password_files[@]}" | rofi -config ~/.config/rofi/config-wayland -dmenu)
 
 [[ -n $password ]] || exit
 
 gopass "$password" | head -n 1 | xclip -sel c 2>/dev/null
 gopass "$password" | head -n 1 | wl-copy 2>/dev/null
+
+notify-send "Copied $password to clipboard"

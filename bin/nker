@@ -12,6 +12,11 @@ function print_help() {
     eselect kernel list | tail -n +2 | cut -f 6 -d ' ' | awk '{ print "    ", $0; }'
 }
 
+function determine_ld() {
+    local ld_name="$(ld -v | cut -f 2 -d ' ')"
+    echo "${ld_name}"
+}
+
 function validate_kernel() {
     # Matches WORD-NUM.NUM....-WORD
     local kernel_version_regex='^([^\s]+)-([0-9]+([.][0-9]+)+)-([^\s]+)$'
@@ -160,6 +165,7 @@ spinner() {
 # START
 
 logfile="/tmp/nker.log"
+builddir="/tmp/nker"
 
 # Kill all subprocess
 trap 'kill $(jobs -p) > $logfile 2>&1' EXIT
@@ -221,13 +227,29 @@ if [ ! -d "$kernel_path" ]; then
 fi
 
 # Begin process
-renice -n 19 $$ > $logfile 2>&1
+renice -n 19 $$ >> $logfile 2>&1
 progress "header" "Using $kernel\n"
+
+# Set linker to bfd (gold causes issues)
+ld="$(determine_ld)"
+fixed_ld=0;
+if [[ ${ld} == "ld" ]]; then
+    progress "info" "Linker is ld.bfd "
+    print_ok
+elif [[ ${ld} == "gold" ]]; then
+    progress "info" "Set linker to ld.bfd "
+    binutils-config --linker ld.bfd >> $logfile 2>&1
+    fixed_ld=1
+    print_ok
+else
+    progress "error" "Unknown linker, bailing!\n"
+    exit 1
+fi
 
 # Build the kernel
 cores="$(ncpu)"
 
-pushd /usr/src/$kernel > $logfile 2>&1 || exit 1
+pushd /usr/src/$kernel >> $logfile 2>&1 || exit 1
 progress "header" "Beginning kernel build\n"
 
 # progress "log" "Using $cores cores\n"
@@ -240,36 +262,53 @@ else
 fi
 
 #progress "info" "Running clean"
-#make -j"$cores" clean > $logfile 2>&1 &
+#make -j"$cores" clean >> $logfile 2>&1 &
 #spinner
+popd >> $logfile 2>&1 || exit 1
 
+progress "info" "Copying sources to RAM"
+mkdir $builddir
+rsync -a /usr/src/$kernel $builddir >> $logfile 2>&1 &
+spinner
+
+pushd $builddir/$kernel >> $logfile 2>&1 || exit 1
 progress "info" "Building bzImage"
-make -j"$cores" bzImage > $logfile 2>&1 &
+make -j"$cores" bzImage >> $logfile 2>&1 &
 spinner
 
 progress "info" "Building modules"
-make -j"$cores" modules > $logfile 2>&1 &
+make -j"$cores" modules >> $logfile 2>&1 &
 spinner
 
 progress "info" "Installing kernel"
-make -j"$cores" install > $logfile 2>&1 &
+make -j"$cores" install >> $logfile 2>&1 &
 spinner
 
 progress "info" "Installing modules"
-make -j"$cores" modules_install > $logfile 2>&1 &
+make -j"$cores" modules_install >> $logfile 2>&1 &
 spinner
-popd > $logfile 2>&1 || exit 1
+popd >> $logfile 2>&1 || exit 1
+
+progress "info" "Removing sources from RAM"
+rm -rf $builddir >> $logfile 2>&1 &
+spinner
+
+# Revert linker
+if [[ ${fixed_ld} == 1 ]]; then
+    progress "info" "Setting linker back to ld.gold"
+    binutils-config --linker ld.gold >> /dev/null 2>&1
+    print_ok
+fi
 
 # Update modules
 progress "info" "Rebuilding external modules"
-emerge @module-rebuild > $logfile 2>&1 &
+emerge @module-rebuild >> $logfile 2>&1 &
 spinner
-
 
 # Build the initrd
 progress "info" "Creating initrd"
 dracut_kver="$(echo $kernel | cut -f 2- -d '-')"
-dracut --force '' "$dracut_kver" > $logfile 2>&1 &
+dracut --force '' "$dracut_kver" >> $logfile 2>&1 &
 spinner
 
 # Clean old files
@@ -279,7 +318,7 @@ print_ok
 
 # Update Grub
 progress "info" "Updating grub "
-grub-mkconfig -o /boot/grub/grub.cfg > $logfile 2>&1
+grub-mkconfig -o /boot/grub/grub.cfg >> $logfile 2>&1
 print_ok
 
 progress "header" "Done!\n"

@@ -69,9 +69,10 @@ root_mapping = {
 }
 
 def rsync_copy_update(src, dst):
-    cmd = ["rsync" "-Pav" "--no-links" "--delete" "--dry-run" src/"" dst/""]
+    cmd = ["rsync", "-Pav", "--no-links", "--delete", str(src),
+            str(dst)]
     logger.debug(cmd)
-    output = check_output([cmd])
+    output = check_output(cmd)
     logger.debug(output)
 
 def handle_copy(src, dst):
@@ -90,7 +91,7 @@ for key in root_mapping:
         handle_mapping(value)
     elif isinstance(value, Path):
         logger.info("Handling {} as copy".format(key))
-        handle_copy(value, key)
+        handle_copy(str(value) + '/', str(key) + '/')
     else:
         logger.info("Skipping {}".format(key))
 
