@@ -2,7 +2,7 @@
 
 import os
 import platform
-from logzero import logger
+from logzero import logger, loglevel, logging
 from pathlib import Path
 from subprocess import check_output
 
@@ -98,6 +98,22 @@ def handle_mapping(root, mapping):
         else:
             logger.info("Skipping {}".format(key))
 
+def verify_mapping(root, mapping):
+    for key in mapping:
+        value = mapping[key]
+        if isinstance(value, dict):
+            verify_mapping(str(root) + '/' + str(key), value)
+        elif isinstance(value, Path):
+            existent_paths = [x for x in Path(str(root) + '/' + str(key)).iterdir()]
+            logger.info(existent_paths)
+            git_path = str(root) + '/' + str(key)
+            logger.info(git_path)
+        else:
+            pass
 
+loglevel(level=logging.INFO)
 logger.info("Starting dotfile update")
 handle_mapping(script_dir, root_mapping)
+logger.info("Verifying")
+verify_mapping(script_dir, root_mapping)
+logger.info("DONE")
