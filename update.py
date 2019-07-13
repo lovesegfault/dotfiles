@@ -79,19 +79,25 @@ def handle_copy(src, dst):
     rsync_copy_update(src,dst)
 
 
-def handle_mapping(mapping):
-    pass
+def handle_mapping(root, mapping):
+    for key in mapping:
+        value = mapping[key]
+        if isinstance(value, dict):
+            logger.info("Handling {} as mapping".format(key))
+            handle_mapping(str(key) + '/', value)
+        elif isinstance(value, Path):
+            logger.info("Handling {} as copy".format(key))
+            if value.is_file():
+                append = ''
+            elif value.is_dir():
+                append = '/'
+            else:
+                logger.error("Skipping nonextant file/dir '{}'".format(value))
+                return
+            handle_copy(str(value) + append, str(root) + str(key) + append)
+        else:
+            logger.info("Skipping {}".format(key))
 
 
 logger.info("Starting dotfile update")
-for key in root_mapping:
-    value = root_mapping[key]
-    if isinstance(value, dict):
-        logger.info("Handling {} as mapping".format(key))
-        handle_mapping(value)
-    elif isinstance(value, Path):
-        logger.info("Handling {} as copy".format(key))
-        handle_copy(str(value) + '/', str(key) + '/')
-    else:
-        logger.info("Skipping {}".format(key))
-
+handle_mapping(script_dir, root_mapping)
