@@ -1,12 +1,19 @@
 eval "$(systemctl --user show-environment)"
 dbus-update-activation-environment --all
 eval "$(/usr/bin/gnome-keyring-daemon --daemonize --start --components=pkcs11,secrets,ssh,gpg)"
+/usr/libexec/polkit-gnome-authentication-agent-1 &
 export SSH_AUTH_SOCK
 export GPG_AGENT_INFO
 export GNOME_KEYRING_CONTROL
 export GNOME_KEYRING_PID
-export XDG_CURRENT_DESKTOP=GNOME
-export DESKTOP_SESSION=gnome
+
+#export QT_AUTO_SCREEN_SCALE_FACTOR=1
+#export GDK_SCALE=2
+#export GDK_DPI_SCALE=0.5
+
+systemctl --user import-environment DISPLAY
 
 xrdb -merge ~/.Xresources
+
+xrandr --output eDP1 --scale 0.5x0.5 --auto
 exec i3

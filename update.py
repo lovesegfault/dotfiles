@@ -43,7 +43,7 @@ def get_config_dir():
 
 
 config_mapping = {
-    "alacritty.yml": get_config_dir() / "alacritty",
+    "alacritty": get_config_dir() / "alacritty",
     "dracut.conf": Path("/etc/dracut.conf"),
     "fstab": Path("/etc/fstab"),
     "genkernel.conf": Path("/etc/genkernel.conf"),

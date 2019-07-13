@@ -1,15 +1,16 @@
 #!usr/bin/zsh
 
 if [ -z $IN_NIX_SHELL ];then
-    PATH=$PATH:/sbin:/usr/sbin
-    PATH=$HOME/bin:$PATH # Self-compiled
-    PATH=$PATH:$HOME/.cargo/bin # Rust
-    PATH=$PATH:$HOME/.local/bin  # Pip
+    PATH="$HOME/.cargo/bin:$PATH" # Rust
+    PATH="$HOME/bin:$PATH" # Self-compiled
+    PATH="$PATH:$HOME/.local/bin"  # Pip
+    PATH="$PATH:/opt/xilinx/Vivado/2018.3/bin"
+    PATH="$PATH:/sbin:/usr/sbin"
     export PATH
 fi
 
 if [ -z $LIBCLANG_PATH ]; then
-    LIBCLANG_PATH="/usr/lib/llvm/7/lib64"
+    LIBCLANG_PATH="/usr/lib/llvm/8/lib64"
     export LIBCLANG_PATH
 fi
 
@@ -29,10 +30,12 @@ export HISTSIZE
 export SAVEHIST
 
 EDITOR='nvim'
-PAGER='vimpager'
+PAGER="less"
 export EDITOR
 export PAGER
 
+PYCHARM_JDK=`java-config -O`
+export PYCHARM_JDK
 
 CCACHE_DIR="/gentoo/ccache"
 export CCACHE_DIR
@@ -80,6 +83,8 @@ bindkey "^[[1;3D" backward-word
 bindkey -s "^O" 'nvim $(sk -m)^M'
 
 # Some useful aliases
+## Taskwarrior
+alias t="task"
 ## Use bat instead of cat
 alias cat="bat"
 alias b="bat"
@@ -93,15 +98,19 @@ alias sync="sync & watch -n 1 rg -e Dirty: /proc/meminfo"
 alias wg="sudo wg"
 ## Some utility aliases
 alias pip="pip3"
+alias v="nvim"
 alias vim="nvim"
 alias vi="nvim"
 alias pass="gopass"
 ## Git
+alias g="git"
 alias ga="git add"
 alias gaa="git add -A"
 alias gap="git add --patch"
 alias gaap="git add -A --patch"
 alias gc="git commit"
+alias gch="git checkout"
+alias gcl="git clone"
 alias gd="git difftool"
 alias gf="git fetch --prune"
 alias gl="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all"
@@ -112,24 +121,21 @@ alias gpl="git pull --rebase"
 alias gr="git rebase"
 ## Cargo
 alias cb="cargo build"
-alias cc="cargo check"
-alias cdoc="cargo doc"
-alias cr="cargo run"
-alias ct="cargo test"
 alias cbr="cargo build --release"
-alias ccr="cargo check --release"
+alias cc="cargo check"
+alias ccl="cargo clean"
+alias cdoc="cargo doc"
 alias cdocr="cargo doc --release"
+alias clp="cargo clippy"
+alias cr="cargo run"
 alias crr="cargo run --release"
+alias ct="cargo test"
 alias ctr="cargo test --release"
 ## Portage
-alias cls="sudo emerge -av --depclean"
 alias upd="sudo emerge --sync"
 alias upg="sudo emerge -uDU --keep-going --with-bdeps=y @world"
-## z.lua
-alias zc='z -c'      # restrict matches to subdirs of $PWD
-alias zz='z -i'      # cd with interactive selection
-alias zf='z -I'      # use fzf to select in multiple matches
-alias zb='z -b'      # quickly cd to the parent directory
+alias dcl="sudo emerge -av --depclean"
+alias mnt="upd && upg && dcl && sudo emaint -f all"
 
 # added by travis gem
 [ -f /home/bemeurer/.travis/travis.sh ] && source /home/bemeurer/.travis/travis.sh

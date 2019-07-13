@@ -6,12 +6,15 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.local/share/nvim/plugged')
+Plug 'amal-khailtash/vim-xdc-syntax'
 Plug 'ayu-theme/ayu-vim'
 Plug 'bronson/vim-trailing-whitespace'
+Plug 'dcharbon/vim-flatbuffers'
 Plug 'flazz/vim-colorschemes'
 Plug 'gentoo/gentoo-syntax'
 Plug 'junegunn/goyo.vim'
 Plug 'lervag/vimtex'
+Plug 'liuchengxu/graphviz.vim'
 Plug 'lnl7/vim-nix'
 Plug 'lotabout/skim', {'do':'./install'}
 Plug 'lotabout/skim.vim'
@@ -20,20 +23,21 @@ Plug 'majutsushi/tagbar'
 Plug 'mattn/gist-vim'
 Plug 'mattn/webapi-vim'
 Plug 'nathanaelkane/vim-indent-guides'
-Plug 'neoclide/coc.nvim', {'do':{-> coc#util#install()}}
+Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 Plug 'nfnty/vim-nftables'
 Plug 'potatoesmaster/i3-vim-syntax'
+Plug 'powerman/vim-plugin-AnsiEsc'
 Plug 'qnighy/lalrpop.vim'
 Plug 'rust-lang/rust.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
+Plug 'uarun/vim-protobuf'
+Plug 'vhda/verilog_systemverilog.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'vim-scripts/Improved-AnsiEsc'
 Plug 'wellle/tmux-complete.vim'
-Plug 'zxqfl/tabnine-vim'
 call plug#end()
 
 " Settings
@@ -181,7 +185,19 @@ command -nargs=+ -complete=file -bar Rg silent! grep! <args>|cwindow|redraw!
 " ---- wellle/tmux-complete.vim
 "let g:tmuxcomplete#trigger = ''
 " ---- lervag/vimtex
-let g:vimtex_view_method = 'zathura'
+let g:vimtex_compiler_latexmk = {
+    \ 'options' : [
+    \   '-pdf',
+    \   '-shell-escape',
+    \   '-verbose',
+    \   '-file-line-error',
+    \   '-synctex=1',
+    \   '-interaction=nonstopmode',
+    \ ],
+    \}
+let g:vimtex_compiler_progname = 'nvr'
+let g:vimtex_view_general_viewer = 'evince'
+
 " ---- vim-airline/vim-airline
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tagbar#enabled = 1
@@ -189,14 +205,12 @@ let g:airline_powerline_fonts = 1
 let g:airline_highlighting_cache = 1
 let g:airline#extensions#ale#enabled = 1
 let g:airline_theme='ayu_dark'
-"let g:airline_theme='ayu_mirage'
 " ---- nathanaelkane/vim-indent-guides
 let g:indent_guides_enable_on_vim_startup = 1
 " ---- scrooloose/nerdtree
 let g:NERDTreeWinPos = "left"
 " ---- ayu-theme/ayu-vim
 let ayucolor="dark"
-"let ayucolor="mirage"
 colorscheme ayu
 " ---- majutsushi/tagbar
 noremap <leader>tb :TagbarToggle<CR>

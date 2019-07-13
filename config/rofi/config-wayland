@@ -1,10 +1,10 @@
 rofi.combi-modi:            window,drun,ssh
-rofi.theme:                 solarized
 rofi.font:                  Hack 10
-rofi.width                  20
 rofi.location:              2
-rofi.threads:               0
-rofi.terminal:              alacritty
-rofi.run-shell-command:     {terminal} -e {cmd}
 rofi.modi:                  drun
+rofi.run-shell-command:     {terminal} -e {cmd}
+rofi.terminal:              alacritty
+rofi.theme:                 solarized
 rofi.theme: /usr/share/rofi/themes/glue_pro_blue.rasi
+rofi.threads:               0
+rofi.width                  20
