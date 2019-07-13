@@ -9,9 +9,11 @@ name = "pypi"
 
 logzero = "*"
 beautysh = "*"
+gitignore-parser = "*"
 
 
 [dev-packages]
 
 pylint = "*"
 jedi = "*"
+rope = "*"
