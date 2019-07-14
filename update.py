@@ -74,35 +74,10 @@ def bin_path():
 
 # Mapping for configuration files
 config_mapping = {
-    "Xresources": home_path / ".Xresources",
     "alacritty": config_path() / "alacritty",
-    "bbswitch.conf": Path("/etc/modprobe.d/bbswitch.conf"),
-    "blacklist.conf": Path("/etc/modprobe.d/blacklist.conf"),
-    "cfg80211.conf": Path("/etc/modprobe.d/cfg80211.conf"),
-    "dracut.conf": Path("/etc/dracut.conf"),
-    "dracut.conf.d": Path("/etc/dracut.conf.d"),
-    "fstab": Path("/etc/fstab"),
-    "genkernel.conf": Path("/etc/genkernel.conf"),
-    "gitconfig": home_path / ".gitconfig",
     "gopass": config_path() / "gopass",
-    "grub": Path("/etc/default/grub"),
-    "i3": config_path() / "i3",
-    "i3status-rs.toml": config_path() / "i3status-rs.toml",
-    "libinput-gestures.conf": config_path() / "libinput-gestures.conf",
-    "make.conf": Path("/etc/portage/make.conf"),
-    "mako": config_path() / "mako",
-    "modules-load.d": Path("/etc/modules-load.d"),
-    "newsboat": home_path / ".newsboat" / "config",
-    "newsboat-urls": home_path / ".newsboat" / "urls",
     "nvim": config_path() / "nvim",
-    "resolved.conf": Path("/etc/systemd/resolved.conf"),
-    "rofi": config_path() / "rofi",
-    "sway": config_path() / "sway",
-    "swaylock": config_path() / "swaylock",
-    "tlp.conf": Path("/etc/tlp.conf"),
     "tmux": config_path() / "tmux",
-    "vconsole.conf": Path("/etc/vconsole.conf"),
-    "xinitrc": home_path / ".xinitrc",
     "zshrc": home_path / ".zshrc",
 }
 
@@ -110,17 +85,7 @@ config_mapping = {
 bin_mapping = {
     "aim": bin_path() / "aim",
     "bimp": bin_path() / "bimp",
-    "checkiommu": bin_path() / "checkiommu",
-    "fixhd": bin_path() / "fixhd",
-    "fuzzylock": bin_path() / "fuzzylock",
-    "menu": bin_path() / "menu",
-    "nker": bin_path() / "nker",
-    "part": bin_path() / "part",
-    "passmenu": bin_path() / "passmenu",
-    "prtsc": bin_path() / "prtsc",
-    "sway-launcher": bin_path() / "sway-launcher",
     "testfonts": bin_path() / "testfonts",
-    "wm": bin_path() / "wm",
 }
 
 # Mapping for dotfiles (root) directory.
@@ -137,7 +102,6 @@ root_mapping = {
     "bin": bin_mapping,
     "config": config_mapping,
     "update.py": None,
-    "kernel": None,
     "walls": picture_path() / "walls",
     "papers": doc_path() / "papers"
 }

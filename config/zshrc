@@ -167,16 +167,6 @@ alias xr="cargo xrun"
 alias xrr="cargo xrun --release"
 alias xt="cargo xtest"
 alias xtr="cargo xtest --release"
-## Portage
-alias upd="sudo emerge --sync"
-alias upg="sudo emerge -UDNAavu --keep-going --with-bdeps=y @world"
-alias dcl="sudo emerge -av --depclean"
-alias ecl="sudo eclean-dist && sudo eclean-pkg"
-alias mnt="upd && upg && dcl && sudo emaint -f all && ecl"
-## Repoman
-alias rch="repoman -dx full"
-alias rcm="repoman commit"
-alias rma="repoman manifest"
 ## NPM trash
 alias nupd="npm -g upgrade"
 ## Local updates
