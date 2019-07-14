@@ -106,6 +106,7 @@ root_mapping = {
     "bin": bin_mapping,
     "config": config_mapping,
     "update.py": None,
+    "kernel": None,
     "walls": get_picture_dir() / "walls",
 }
 
