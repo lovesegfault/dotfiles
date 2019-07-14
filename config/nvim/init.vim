@@ -159,6 +159,9 @@ else
 endif
 
 " Plugin settings
+" ---- Python
+let g:python2_host_prog = '/usr/local/bin/python'
+let g:python3_host_prog = '/usr/local/bin/python3'
 " ---- luochen1990/rainbow
 let g:rainbow_active = 1
 " ---- lotabout/skim.vim
@@ -186,7 +189,7 @@ let g:vimtex_compiler_latexmk = {
     \ ],
 \ }
 let g:vimtex_compiler_progname = 'nvr'
-let g:vimtex_view_general_viewer = 'evince'
+let g:vimtex_view_method = 'skim'
 " ---- nathanaelkane/vim-indent-guides
 let g:indent_guides_enable_on_vim_startup = 1
 " ---- ayu-theme/ayu-vim
