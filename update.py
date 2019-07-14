@@ -100,6 +100,7 @@ bin_mapping = {
 # dict - Handle as (nested) mapping
 root_mapping = {
     ".gitignore": None,
+    ".gitattributes": None,
     "LICENSE": None,
     "Pipfile": None,
     "README.md": None,
