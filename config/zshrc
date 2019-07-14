@@ -3,10 +3,9 @@
 if [ -z $IN_NIX_SHELL ];then
     PATH="$HOME/.cargo/bin:$PATH" # Rust
     PATH="$HOME/bin:$PATH" # Self-compiled
-    PATH="$PATH:$HOME/.local/share/npm/bin" # NPM trash
-    PATH="$PATH:$HOME/.local/bin" # Pip
-    PATH="$PATH:/opt/xilinx/Vivado/2019.1/bin"
-    PATH="$PATH:/sbin:/usr/sbin"
+    PATH="$PATH:$HOME/.local/bin"  # Pip
+    PATH="/usr/local/bin:/usr/local/sbin:$PATH" # Homebrew
+    PATH="$PATH:/usr/local/texlive/2019/bin/x86_64-darwin" # TeXLive
     export PATH
 
     MANPATH="$MANPATH:$HOME/.local/share/npm/share/man"
@@ -14,9 +13,7 @@ if [ -z $IN_NIX_SHELL ];then
 fi
 
 if [ -z $LIBCLANG_PATH ]; then
-    LLVM_VER="9"
-    export LIBCLANG_PATH="/usr/lib/llvm/${LLVM_VER}/lib64"
-    export PATH="$PATH:/usr/lib/llvm/${LLVM_VER}/bin"
+    export LIBCLANG_PATH="/usr/local/opt/llvm/lib/"
 fi
 
 export SSH_KEY_PATH="$HOME/.ssh/id_rsa"
