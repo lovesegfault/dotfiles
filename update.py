@@ -47,6 +47,16 @@ def get_config_dir():
         raise UpdateError("config-mapping", "Unknown OS: {}".format(system))
 
 
+# Gets the expected directory for config files, depending on the OS
+def get_bin_dir():
+    if system == "Linux":
+        return home_dir / "bin"
+    elif system == "Darwin":
+        return home_dir / "bin"
+    else:
+        raise UpdateError("bin-mapping", "Unknown OS: {}".format(system))
+
+
 # Mapping for configuration files
 config_mapping = {
     "Xresources": home_dir / ".Xresources",
@@ -67,6 +77,22 @@ config_mapping = {
     "zshrc": home_dir / ".zshrc",
 }
 
+# Mapping scripts
+bin_mapping = {
+    "aim": get_bin_dir() / "aim",
+    "aopen": get_bin_dir() / "aopen",
+    "bimp": get_bin_dir() / "bimp",
+    "checkiommu": get_bin_dir() / "checkiommu",
+    "fixhd": get_bin_dir() / "fixhd",
+    "fuzzylock": get_bin_dir() / "fuzzylock",
+    "img.sh": get_bin_dir() / "img.sh",
+    "nker": get_bin_dir() / "nker",
+    "passmenu": get_bin_dir() / "passmenu",
+    "prtsc": get_bin_dir() / "prtsc",
+    "testfonts": get_bin_dir() / "testfonts",
+    "wm": get_bin_dir() / "wm",
+}
+
 # Mapping for dotfiles (root) directory.
 # Semantic map:
 # None - Ignore
@@ -77,9 +103,8 @@ root_mapping = {
     "LICENSE": None,
     "Pipfile": None,
     "README.md": None,
-    "bin": home_dir / "bin",
+    "bin": bin_mapping,
     "config": config_mapping,
-    "kernel": None,
     "update.py": None,
     "walls": get_picture_dir() / "walls",
 }
