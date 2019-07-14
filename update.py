@@ -111,6 +111,12 @@ root_mapping = {
     "walls": get_picture_dir() / "walls",
 }
 
+def make_dir(dst):
+    cmd = ["mkdir", "-p", str(dst)]
+    logger.debug(cmd)
+    output = check_output(cmd)
+    logger.debug(output)
+
 # Copies file or directory. In the latter it will delete files in the
 # destination not in the source.
 def handle_copy(src, dst):
@@ -122,6 +128,7 @@ def handle_copy(src, dst):
 
 # Transverse a mapping, copying leaf nodes to their destination
 def handle_mapping(root, mapping):
+    logger.debug("Mapping with root {}".format(root))
     for key in mapping:
         value = mapping[key]
         if isinstance(value, dict):
@@ -136,9 +143,10 @@ def handle_mapping(root, mapping):
                 append = ''
             elif value.is_dir():
                 append = '/'
+                make_dir(str(root) + '/' + str(key) + append)
             else:
                 raise UpdateError("handle-mapping", "'{}' is neither file nor dir (?!)".format(value))
-            handle_copy(str(value) + append, str(root) + str(key) + append)
+            handle_copy(str(value) + append, str(root) + '/' + str(key) + append)
         else:
             logger.debug("Skipping {}".format(key))
 
