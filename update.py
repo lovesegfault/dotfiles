@@ -128,13 +128,15 @@ def handle_mapping(root, mapping):
             handle_mapping(str(key) + '/', value)
         elif isinstance(value, Path):
             logger.debug("Handling {} as copy".format(key))
+            if not value.exists():
+                logger.error("Node '{}' does not exist".format(value))
+                continue
             if value.is_file():
                 append = ''
             elif value.is_dir():
                 append = '/'
             else:
-                logger.error("Skipping nonextant file/dir '{}'".format(value))
-                return
+                raise UpdateError("handle-mapping", "'{}' is neither file nor dir (?!)".format(value))
             handle_copy(str(value) + append, str(root) + str(key) + append)
         else:
             logger.debug("Skipping {}".format(key))
