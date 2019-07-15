@@ -264,14 +264,7 @@ fi
 #progress "info" "Running clean"
 #make -j"$cores" clean >> $logfile 2>&1 &
 #spinner
-popd >> $logfile 2>&1 || exit 1
 
-progress "info" "Copying sources to RAM"
-mkdir $builddir
-rsync -a /usr/src/$kernel $builddir >> $logfile 2>&1 &
-spinner
-
-pushd $builddir/$kernel >> $logfile 2>&1 || exit 1
 progress "info" "Building bzImage"
 make -j"$cores" bzImage >> $logfile 2>&1 &
 spinner
@@ -288,10 +281,6 @@ progress "info" "Installing modules"
 make -j"$cores" modules_install >> $logfile 2>&1 &
 spinner
 popd >> $logfile 2>&1 || exit 1
-
-progress "info" "Removing sources from RAM"
-rm -rf $builddir >> $logfile 2>&1 &
-spinner
 
 # Revert linker
 if [[ ${fixed_ld} == 1 ]]; then
