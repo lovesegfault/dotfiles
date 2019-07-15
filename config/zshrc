@@ -10,64 +10,43 @@ if [ -z $IN_NIX_SHELL ];then
 fi
 
 if [ -z $LIBCLANG_PATH ]; then
-    LIBCLANG_PATH="/usr/lib/llvm/8/lib64"
-    export LIBCLANG_PATH
+    export LIBCLANG_PATH="/usr/lib/llvm/8/lib64"
 fi
 
-SSH_KEY_PATH="$HOME/.ssh/id_rsa"
-GPG_TTY=$(tty)
-export SSH_KEY_PATH
-export GPG_TTY
+export SSH_KEY_PATH="$HOME/.ssh/id_rsa"
+export GPG_TTY=$(tty)
 
-XDG_CONFIG_HOME="$HOME/.config"
-export XDG_CONFIG_HOME
+export HISTFILE=~/.zsh_history
+export HISTSIZE=10000
+export SAVEHIST=10000
 
-HISTFILE=~/.zsh_history
-HISTSIZE=10000
-SAVEHIST=10000
-export HISTFILE
-export HISTSIZE
-export SAVEHIST
+export EDITOR='nvim'
+export PAGER="less"
 
-EDITOR='nvim'
-PAGER="less"
-export EDITOR
-export PAGER
+export CCACHE_DIR="/gentoo/ccache"
+export GOPATH="$HOME/.go"
+export PYCHARM_JDK="$(java-config -O)"
+export XDG_CONFIG_HOME="$HOME/.config"
 
-PYCHARM_JDK=`java-config -O`
-export PYCHARM_JDK
-
-CCACHE_DIR="/gentoo/ccache"
-export CCACHE_DIR
-
-SPACESHIP_PROMPT_ADD_NEWLINE=false
-SPACESHIP_PROMPT_SEPARATE_LINE=false
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status background_jobs time)
 
 # zplug
-ZPLUG_HOME=$HOME/.zplug
-export ZPLUG_HOME
+export ZPLUG_HOME=$HOME/.zplug
 source $ZPLUG_HOME/init.zsh
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 zplug "zdharma/fast-syntax-highlighting", defer:2
-zplug "voronkovich/gitignore.plugin.zsh"
-zplug "skywind3000/z.lua"
-zplug 'sei40kr/zsh-tmux-rename'
 zplug "zdharma/history-search-multi-word", defer:2
 zplug "zsh-users/zsh-history-substring-search", defer:2
 zplug "zsh-users/zsh-completions", defer:2
 zplug "zsh-users/zsh-autosuggestions", defer:2
 zplug "hlissner/zsh-autopair", defer:2
-zplug "zpm-zsh/colors"
 zplug "hcgraf/zsh-sudo"
-zplug "plugins/colored-man-pages", from:oh-my-zsh
-zplug "plugins/cargo", from:oh-my-zsh
-zplug "plugins/rust", from:oh-my-zsh
 zplug "chisui/zsh-nix-shell"
 zplug "spwhitt/nix-zsh-completions", defer:2
+zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme
 # Load theme file
-# zplug 'agnoster/agnoster-zsh-theme', as:theme
 #zplug "chisui/0d12bd51a5fd8e6bb52e6e6a43d31d5e", from:gist, as:theme, use:agnoster-nix.zsh-theme
-zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, as:theme
 zplug load
 
 # keybinds
