@@ -4,8 +4,4 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-curl -s https://am.i.mullvad.net/json | \
-    jq -C | \
-    tail -n +2 | \
-    head -n -1 | \
-    cut -f 3- -d ' '
+curl -s https://am.i.mullvad.net/json | jq -C
