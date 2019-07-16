@@ -36,6 +36,15 @@ def get_picture_dir():
     else:
         raise UpdateError("root-mapping", "Unknown OS: {}".format(system))
 
+# Gets the expected directory for pictures, depending on the OS
+def get_documents_dir():
+    if system == "Linux":
+        return home_dir / "docs"
+    elif system == "Darwin":
+        return home_dir / "Documents"
+    else:
+        raise UpdateError("root-mapping", "Unknown OS: {}".format(system))
+
 
 # Gets the expected directory for config files, depending on the OS
 def get_config_dir():
@@ -109,6 +118,7 @@ root_mapping = {
     "update.py": None,
     "kernel": None,
     "walls": get_picture_dir() / "walls",
+    "papers": get_documents_dir() / "papers"
 }
 
 def make_dir(dst):
