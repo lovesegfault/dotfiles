@@ -1,0 +1,180 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+repo_path="/var/db/repos/bemeurer"
+
+function print_help() {
+    echo "USAGE: apkg [ATOM]"
+    echo ""
+    echo "Please provide at least one appropriate package atom of form category/pkg-name"
+}
+
+function cprintf() {
+    # This requires the following arguments
+    # $color $string
+    if [ "$#" -ne 2 ]; then
+        progress "error" "INVALID USAGE OF 'color_print'\n"
+        progress "error" "PLEASE REPORT THIS TO A MAINTAINER\n"
+        exit 1
+    fi
+    local color
+    case "$1" in
+        black)
+            color=0
+            ;;
+        red)
+            color=1
+            ;;
+        green)
+            color=2
+            ;;
+        yellow)
+            color=3
+            ;;
+        blue)
+            color=4
+            ;;
+        magenta)
+            color=5
+            ;;
+        cyan)
+            color=6
+            ;;
+        white)
+            color=7
+            ;;
+        *)
+            progress "error" "INVALID COLOR '$1' PASSED TO 'cprintf'\n"
+            progress "error" "PLEASE REPORT THIS TO A MAINTAINER\n"
+            exit 1
+    esac
+    printf "%s$2%s" "$(tput setaf $color)" "$(tput sgr 0)"
+}
+
+function progress() {
+    # This requires the following arguments
+    # $type $message
+    # $type is one of: header; info; log; error
+    local scolor
+    local mstart
+    local mcolor
+    local mtype
+    case "$1" in
+        header)
+            scolor="green"
+            mstart="$(tput bold)>>>> $(tput sgr 0)"
+            mcolor="white"
+            mtype="$(tput bold)"
+            ;;
+        info)
+            scolor="cyan"
+            mstart=">>>> "
+            mcolor="white"
+            mtype=""
+            ;;
+        log)
+            scolor="cyan"
+            mstart=">>>> "
+            mcolor="blue"
+            mtype="$(tput dim)"
+            ;;
+        error)
+            scolor="red"
+            mstart="$(tput bold)>>>> $(tput sgr 0)"
+            mcolor="red"
+            mtype="$(tput bold)$(tput smul)"
+            ;;
+        *)
+            progress "error" "INVALID TYPE '$1' PASSED TO 'progress'\n"
+            progress "error" "PLEASE REPORT THIS TO A MAINTAINER\n"
+            exit 1
+    esac
+    cprintf "$scolor" "$mstart"
+    cprintf "$mcolor" "$mtype$2$(tput sgr 0)"
+}
+
+function ensure_args() {
+    if [ "$#" -lt 1 ]; then
+        progress "error" "Incorrect usage"
+        echo ""
+        print_help
+        exit 1
+    fi
+}
+
+function ensure_root() {
+    # Ensures user is running script as root.
+    if [ "$(id -u)" != "0" ]; then
+        # If not root complain and exit.
+        progress "error"  "Please run apkg as root\n"
+        exit 1
+    fi
+}
+
+function validate_atom() {
+    # NB: Do not EVER try and figure out how to place the version information
+    # into it's own capture group. It's impossible.
+    # POSIX regex sucks, the following is equivalent to this: '^(\w+-?\w+)/([\w.-]+)$
+    local package_atom_regex='^([a-zA-Z0-9_-]+)\/([[a-zA-Z0-9_.+-]+)$'
+    if [[ "$1" =~ $package_atom_regex ]]; then
+        # Valid
+        return 0
+    else
+        # Invalid
+        return 1
+    fi
+}
+
+function validate_args() {
+    for atom in "$@"; do
+        if ! validate_atom "${atom}"; then
+            progress "error" "Invalid package atom: '${atom}'\n"
+            return 1
+        fi
+        return 0
+    done
+}
+
+function mk_pkg_dir() {
+    local atom="$1"
+    local category="$(echo ${atom} | cut -f 1 -d '/')"
+    local pkg_name="$(echo ${atom} | cut -f 2 -d '/')"
+
+    local category_path="${repo_path}/${category}"
+    if [ -d "${category_path}" ]; then
+        progress "info" "Directory for ${category} exists\n"
+    else
+        mkdir "${category_path}"
+        progress "info" "Created directory for ${category}\n"
+    fi
+
+    local pkg_path="${category_path}/${pkg_name}"
+    if [ -d "${pkg_path}" ]; then
+        progress "info" "Directory for ${pkg_name} exists\n"
+    else
+        mkdir "${pkg_path}"
+        progress "info" "Created directory for ${pkg_name}\n"
+    fi
+}
+
+function add_packages() {
+    for atom in "$@"; do
+        progress "header" "Adding '${atom}'\n"
+        mk_pkg_dir "${atom}"
+    done
+}
+
+
+function main() {
+    # Validation
+    ensure_args "$@"
+    ensure_root
+    validate_args "$@"
+    # Setup
+    add_packages "$@"
+}
+
+main "$@"

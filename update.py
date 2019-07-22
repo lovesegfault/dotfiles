@@ -90,6 +90,7 @@ config_mapping = {
 bin_mapping = {
     "aim": get_bin_dir() / "aim",
     "aopen": get_bin_dir() / "aopen",
+    "apkg": get_bin_dir() / "apkg",
     "bimp": get_bin_dir() / "bimp",
     "checkiommu": get_bin_dir() / "checkiommu",
     "fixhd": get_bin_dir() / "fixhd",
