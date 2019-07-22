@@ -24,17 +24,17 @@ export EDITOR='nvim'
 export PAGER="less"
 
 export CCACHE_DIR="/gentoo/ccache"
-export GOPATH="$HOME/.go"
-export PYCHARM_JDK="$(java-config -O)"
+export GOPATH="$HOME/.cache/go"
+#export PYCHARM_JDK="$(java-config -O)"
 export XDG_CONFIG_HOME="$HOME/.config"
 
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status background_jobs time)
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context time dir vcs)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
 
 # zplug
 export ZPLUG_HOME=$HOME/.zplug
 source $ZPLUG_HOME/init.zsh
-zplug 'zplug/zplug', hook-build:'zplug --self-manage'
+zplug "zplug/zplug", hook-build:"zplug --self-manage"
 zplug "zdharma/fast-syntax-highlighting", defer:2
 zplug "zdharma/history-search-multi-word", defer:2
 zplug "zsh-users/zsh-history-substring-search", defer:2
@@ -99,17 +99,28 @@ alias gp="git push"
 alias gpl="git pull --rebase"
 alias gr="git rebase"
 ## Cargo
+alias c="cargo"
 alias cb="cargo build"
 alias cbr="cargo build --release"
 alias cc="cargo check"
 alias ccl="cargo clean"
 alias cdoc="cargo doc"
-alias cdocr="cargo doc --release"
 alias clp="cargo clippy"
 alias cr="cargo run"
 alias crr="cargo run --release"
 alias ct="cargo test"
 alias ctr="cargo test --release"
+## Xargo
+alias xb="cargo xbuild"
+alias xbr="cargo xbuild --release"
+alias xc="cargo xcheck"
+alias xl="cargo clean"
+alias xd="cargo doc"
+alias xcl="cargo xclippy"
+alias xr="cargo xrun"
+alias xrr="cargo xrun --release"
+alias xt="cargo xtest"
+alias xtr="cargo xtest --release"
 ## Portage
 alias upd="sudo emerge --sync"
 alias upg="sudo emerge -uDU --keep-going --with-bdeps=y @world"
