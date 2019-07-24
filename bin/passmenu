@@ -1,17 +1,36 @@
 #!/usr/bin/env bash
 
 shopt -s nullglob globstar
+passmenu_path="$(readlink -f $0)"
 
-prefix=${PASSWORD_STORE_DIR-~/.password-store}
-password_files=( "$prefix"/**/*.gpg )
-password_files=( "${password_files[@]#"$prefix"/}" )
-password_files=( "${password_files[@]%.gpg}" )
+function passmenu_window() {
+    prefix=${PASSWORD_STORE_DIR-~/.password-store}
+    password_files=( "$prefix"/**/*.gpg )
+    password_files=( "${password_files[@]#"$prefix"/}" )
+    password_files=( "${password_files[@]%.gpg}" )
 
-password=$(printf '%s\n' "${password_files[@]}" | rofi -config ~/.config/rofi/config-wayland -dmenu)
+    name="$(printf '%s\n' ${password_files[@]} | sk)"
 
-[[ -n $password ]] || exit
+    echo "${name}" > /tmp/passmenu_fifo
+}
 
-gopass "$password" | head -n 1 | xclip -sel c 2>/dev/null
-gopass "$password" | head -n 1 | wl-copy 2>/dev/null
+function passmenu_backend() {
+    export PASSMENU_BEHAVE_AS_WINDOW=1;
+    alacritty -d 80 20 -t passmenu --class passmenu -e "${passmenu_path}"
 
-notify-send "Copied $password to clipboard"
+    name="$(cat /tmp/passmenu_fifo)"
+    rm -f /tmp/passmenu_fifo
+    if [ "${name}" == "" ]; then
+        exit
+    fi
+
+    gopass "${name}" | wl-copy
+    notify-send "✔ Copied ${name} to clipboard."
+}
+
+if (($PASSMENU_BEHAVE_AS_WINDOW == 1)); then
+    passmenu_window
+else
+    passmenu_backend
+fi
+
