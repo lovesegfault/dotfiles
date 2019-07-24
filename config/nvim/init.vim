@@ -19,7 +19,7 @@ Plug 'lnl7/vim-nix'
 Plug 'lotabout/skim', {'do':'./install'}
 Plug 'lotabout/skim.vim'
 Plug 'luochen1990/rainbow'
-Plug 'majutsushi/tagbar'
+"Plug 'majutsushi/tagbar'
 Plug 'mattn/gist-vim'
 Plug 'mattn/webapi-vim'
 Plug 'nathanaelkane/vim-indent-guides'
