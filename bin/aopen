@@ -5,8 +5,8 @@ set -o nounset
 set -o pipefail
 
 find /usr/share/applications -name '*.desktop' | \
-cut -f 5 -d '/' | \
-sed 's/.desktop//g' | \
-sort -u | \
-sk | \
-xargs -r swaymsg -t command exec gtk-launch
+    cut -f 5 -d '/' | \
+    sed 's/.desktop//g' | \
+    sort -u | \
+    sk | \
+    xargs -r swaymsg -t command exec gtk-launch
