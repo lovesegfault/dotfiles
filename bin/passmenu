@@ -29,7 +29,7 @@ function passmenu_backend() {
     fi
     #notify-send "Copying password"
 
-    gopass "${name}" | wl-copy
+    gopass show --password "${name}" | wl-copy
     notify-send "✔ Copied ${name} to clipboard."
 }
 
