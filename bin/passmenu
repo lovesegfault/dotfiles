@@ -2,6 +2,7 @@
 
 shopt -s nullglob globstar
 passmenu_path="$(readlink -f $0)"
+passmenu_fifo="/tmp/passmenu_fifo"
 
 function passmenu_window() {
     prefix=${PASSWORD_STORE_DIR-~/.password-store}
@@ -9,28 +10,34 @@ function passmenu_window() {
     password_files=( "${password_files[@]#"$prefix"/}" )
     password_files=( "${password_files[@]%.gpg}" )
 
+    #notify-send "Querying name"
     name="$(printf '%s\n' ${password_files[@]} | sk)"
 
-    echo "${name}" > /tmp/passmenu_fifo
+    #notify-send "Writeback ${name}"
+    echo "${name}" > "${passmenu_fifo}"
 }
 
 function passmenu_backend() {
     export PASSMENU_BEHAVE_AS_WINDOW=1;
     alacritty -d 80 20 -t passmenu --class passmenu -e "${passmenu_path}"
 
+    #notify-send "Reading name"
     name="$(cat /tmp/passmenu_fifo)"
     rm -f /tmp/passmenu_fifo
     if [ "${name}" == "" ]; then
         exit
     fi
+    #notify-send "Copying password"
 
     gopass "${name}" | wl-copy
     notify-send "✔ Copied ${name} to clipboard."
 }
 
-if (($PASSMENU_BEHAVE_AS_WINDOW == 1)); then
+if [[ -v PASSMENU_BEHAVE_AS_WINDOW ]]; then
+    #notify-send "Spawning window"
     passmenu_window
 else
+    #notify-send "Spawning backend"
     passmenu_backend
 fi
 
