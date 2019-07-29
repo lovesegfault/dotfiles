@@ -27,6 +27,7 @@ export CCACHE_DIR="/gentoo/ccache"
 export GOPATH="$HOME/.cache/go"
 #export PYCHARM_JDK="$(java-config -O)"
 export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CURRENT_DESKTOP="Unity"
 
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context time dir vcs)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
