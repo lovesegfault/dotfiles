@@ -25,7 +25,6 @@ export PAGER="less"
 
 export CCACHE_DIR="/gentoo/ccache"
 export GOPATH="$HOME/.cache/go"
-#export PYCHARM_JDK="$(java-config -O)"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CURRENT_DESKTOP="Unity"
 
@@ -92,7 +91,7 @@ alias gc="git commit"
 alias gch="git checkout"
 alias gcl="git clone"
 alias gd="git difftool"
-alias gf="git fetch --prune"
+alias gf="git fetch --prune --all"
 alias gl="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all"
 alias gs="git status --find-renames --show-stash"
 alias gm="git merge"
@@ -126,7 +125,11 @@ alias xtr="cargo xtest --release"
 alias upd="sudo emerge --sync"
 alias upg="sudo emerge -uDU --keep-going --with-bdeps=y @world"
 alias dcl="sudo emerge -av --depclean"
-alias mnt="upd && upg && dcl && sudo emaint -f all"
+alias ecl="sudo eclean-dist"
+alias mnt="upd && upg && dcl && sudo emaint -f all && ecl"
+## Repoman
+alias rch="repoman -dx full"
+alias rcm="repoman commit"
 
 # added by travis gem
 [ -f /home/bemeurer/.travis/travis.sh ] && source /home/bemeurer/.travis/travis.sh
