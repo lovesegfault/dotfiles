@@ -41,4 +41,4 @@ while read -r card; do
     fi
 done <<< $cards
 
-exec sway --my-next-gpu-wont-be-nvidia >> /dev/null 2>&1
+exec sway --my-next-gpu-wont-be-nvidia > /tmp/sway.log 2>&1
