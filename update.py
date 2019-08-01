@@ -80,6 +80,7 @@ config_mapping = {
     "nvim": get_config_dir() / "nvim",
     "rofi": get_config_dir() / "rofi",
     "sway": get_config_dir() / "sway",
+    "tlp.conf": Path("/etc/tlp.conf"),
     "tmux.conf": home_dir / ".tmux.conf",
     "vconsole.conf": Path("/etc/vconsole.conf"),
     "xinitrc": home_dir / ".xinitrc",
