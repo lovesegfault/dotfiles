@@ -1,17 +1,14 @@
 " Plugins
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
-
 call plug#begin('~/.local/share/nvim/plugged')
+"Plug 'majutsushi/tagbar'
 Plug 'amal-khailtash/vim-xdc-syntax'
 Plug 'ayu-theme/ayu-vim'
 Plug 'bronson/vim-trailing-whitespace'
+Plug 'cespare/vim-toml'
 Plug 'dcharbon/vim-flatbuffers'
 Plug 'flazz/vim-colorschemes'
 Plug 'gentoo/gentoo-syntax'
+Plug 'igankevich/mesonic'
 Plug 'junegunn/goyo.vim'
 Plug 'lervag/vimtex'
 Plug 'liuchengxu/graphviz.vim'
@@ -19,7 +16,6 @@ Plug 'lnl7/vim-nix'
 Plug 'lotabout/skim', {'do':'./install'}
 Plug 'lotabout/skim.vim'
 Plug 'luochen1990/rainbow'
-"Plug 'majutsushi/tagbar'
 Plug 'mattn/gist-vim'
 Plug 'mattn/webapi-vim'
 Plug 'nathanaelkane/vim-indent-guides'

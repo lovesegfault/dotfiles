@@ -279,10 +279,11 @@ bindsym $mod+r mode "resize"
 
 bar {
     font pango: Hack, FontAwesome 10
-    swaybar_command ~/bin/waybar
+    swaybar_command waybar
 }
 
 exec "dbus-update-activation-environment --all"
+exec "/usr/libexec/polkit-gnome-authentication-agent-1"
 exec "mako"
 exec "sudo systemctl restart NetworkManager"
 exec_always  "libinput-gestures-setup restart"

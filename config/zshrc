@@ -17,8 +17,24 @@ export SSH_KEY_PATH="$HOME/.ssh/id_rsa"
 export GPG_TTY=$(tty)
 
 export HISTFILE=~/.zsh_history
-export HISTSIZE=10000
-export SAVEHIST=10000
+export HISTSIZE=10000000
+export SAVEHIST=10000000
+setopt BANG_HIST                 # Treat the '!' character specially during expansion.
+setopt EXTENDED_HISTORY          # Write the history file in the ":start:elapsed;command" format.
+setopt INC_APPEND_HISTORY        # Write to the history file immediately, not when the shell exits.
+setopt SHARE_HISTORY             # Share history between all sessions.
+setopt HIST_EXPIRE_DUPS_FIRST    # Expire duplicate entries first when trimming history.
+setopt HIST_IGNORE_DUPS          # Don't record an entry that was just recorded again.
+setopt HIST_IGNORE_ALL_DUPS      # Delete old recorded entry if new entry is a duplicate.
+setopt HIST_FIND_NO_DUPS         # Do not display a line previously found.
+setopt HIST_IGNORE_SPACE         # Don't record an entry starting with a space.
+setopt HIST_SAVE_NO_DUPS         # Don't write duplicate entries in the history file.
+setopt HIST_REDUCE_BLANKS        # Remove superfluous blanks before recording entry.
+setopt HIST_VERIFY               # Don't execute immediately upon history expansion.
+setopt HIST_BEEP                 # Beep when accessing nonexistent history.
+
+SPACESHIP_PROMPT_ADD_NEWLINE=false
+SPACESHIP_PROMPT_SEPARATE_LINE=false
 
 export EDITOR='nvim'
 export PAGER="less"
@@ -27,9 +43,6 @@ export CCACHE_DIR="/gentoo/ccache"
 export GOPATH="$HOME/.cache/go"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CURRENT_DESKTOP="Unity"
-
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context time dir vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
 
 # zplug
 export ZPLUG_HOME=$HOME/.zplug
@@ -44,9 +57,7 @@ zplug "hlissner/zsh-autopair", defer:2
 zplug "hcgraf/zsh-sudo"
 zplug "chisui/zsh-nix-shell"
 zplug "spwhitt/nix-zsh-completions", defer:2
-zplug "bhilburn/powerlevel9k", use:powerlevel9k.zsh-theme
-# Load theme file
-#zplug "chisui/0d12bd51a5fd8e6bb52e6e6a43d31d5e", from:gist, as:theme, use:agnoster-nix.zsh-theme
+zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
 zplug load
 
 # keybinds
@@ -62,6 +73,8 @@ bindkey "^[[1;3D" backward-word
 bindkey -s "^O" 'nvim $(sk -m)^M'
 
 # Some useful aliases
+## Tmux
+alias tmux="tmux -f $XDG_CONFIG_HOME/tmux/tmux.conf"
 ## Taskwarrior
 alias t="task"
 ## Use bat instead of cat
@@ -130,6 +143,19 @@ alias mnt="upd && upg && dcl && sudo emaint -f all && ecl"
 ## Repoman
 alias rch="repoman -dx full"
 alias rcm="repoman commit"
+alias rma="repoman manifest"
+
+function ldd() {
+    /usr/bin/ldd ${@} \
+    | grep so \
+    | sed -e '/^[^\t]/ d' \
+    | sed -e 's/\t//' \
+    | sed -e 's/.*=..//' \
+    | sed -e 's/ (0.*)//' \
+    | sort \
+    | uniq -c \
+    | sort -n
+}
 
 # added by travis gem
 [ -f /home/bemeurer/.travis/travis.sh ] && source /home/bemeurer/.travis/travis.sh

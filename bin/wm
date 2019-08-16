@@ -1,18 +1,20 @@
 #!/bin/bash
 #echo "Setting systemd vars"
 eval "$(systemctl --user show-environment)"
+logfile="/tmp/wm.log"
 
 DISPLAY=':0'
-dbus-update-activation-environment --all >> /dev/null 2>&1
+dbus-update-activation-environment --all > "${logfile}" 2>&1
 
 #echo "Starting polkit-gnome"
-/usr/libexec/polkit-gnome-authentication-agent-1 &
+#/usr/libexec/polkit-gnome-authentication-agent-1 &
 #echo "Starting gnome-keyring"
 eval "$(/usr/bin/gnome-keyring-daemon --daemonize --start --components=pkcs11,secrets,ssh,gpg)"
-export SSH_AUTH_SOCK
-export GPG_AGENT_INFO
 export GNOME_KEYRING_CONTROL
 export GNOME_KEYRING_PID
+export GPG_AGENT_INFO
+export SSH_ASKPASS=/usr/libexec/seahorse/ssh-askpass
+export SSH_AUTH_SOCK
 
 #echo "Exporting envvars"
 # qt
@@ -41,4 +43,4 @@ while read -r card; do
     fi
 done <<< $cards
 
-exec sway --my-next-gpu-wont-be-nvidia > /tmp/sway.log 2>&1
+exec sway --my-next-gpu-wont-be-nvidia >> "${logfile}" 2>&1
