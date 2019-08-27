@@ -36,6 +36,7 @@ def get_picture_dir():
     else:
         raise UpdateError("root-mapping", "Unknown OS: {}".format(system))
 
+
 # Gets the expected directory for pictures, depending on the OS
 def get_documents_dir():
     if system == "Linux":
@@ -74,14 +75,17 @@ config_mapping = {
     "fstab": Path("/etc/fstab"),
     "genkernel.conf": Path("/etc/genkernel.conf"),
     "grub": Path("/etc/default/grub"),
+    "gopass": get_config_dir() / "gopass",
     "i3": get_config_dir() / "i3",
     "i3status-rs.toml": get_config_dir() / "i3status-rs.toml",
     "make.conf": Path("/etc/portage/make.conf"),
+    "mako": get_config_dir() / "mako",
     "nvim": get_config_dir() / "nvim",
     "rofi": get_config_dir() / "rofi",
     "sway": get_config_dir() / "sway",
+    "swaylock": get_config_dir() / "swaylock",
     "tlp.conf": Path("/etc/tlp.conf"),
-    "tmux.conf": home_dir / ".tmux.conf",
+    "tmux": get_config_dir() / "tmux",
     "vconsole.conf": Path("/etc/vconsole.conf"),
     "xinitrc": home_dir / ".xinitrc",
     "zshrc": home_dir / ".zshrc",
@@ -91,12 +95,10 @@ config_mapping = {
 bin_mapping = {
     "aim": get_bin_dir() / "aim",
     "aopen": get_bin_dir() / "aopen",
-    "apkg": get_bin_dir() / "apkg",
     "bimp": get_bin_dir() / "bimp",
     "checkiommu": get_bin_dir() / "checkiommu",
     "fixhd": get_bin_dir() / "fixhd",
     "fuzzylock": get_bin_dir() / "fuzzylock",
-    "img.sh": get_bin_dir() / "img.sh",
     "nker": get_bin_dir() / "nker",
     "passmenu": get_bin_dir() / "passmenu",
     "prtsc": get_bin_dir() / "prtsc",
@@ -123,6 +125,7 @@ root_mapping = {
     "papers": get_documents_dir() / "papers"
 }
 
+
 def make_dir(dst):
     cmd = ["mkdir", "-p", str(dst)]
     logger.debug(cmd)
@@ -131,14 +134,18 @@ def make_dir(dst):
 
 # Copies file or directory. In the latter it will delete files in the
 # destination not in the source.
+
+
 def handle_copy(src, dst):
     cmd = ["rsync", "-Pav", "--no-links", "--delete", str(src),
-            str(dst)]
+           str(dst)]
     logger.debug(cmd)
     output = check_output(cmd)
     logger.debug(output)
 
 # Transverse a mapping, copying leaf nodes to their destination
+
+
 def handle_mapping(root, mapping):
     logger.debug("Mapping with root {}".format(root))
     for key in mapping:
@@ -157,10 +164,14 @@ def handle_mapping(root, mapping):
                 append = '/'
                 make_dir(str(root) + '/' + str(key) + append)
             else:
-                raise UpdateError("handle-mapping", "'{}' is neither file nor dir (?!)".format(value))
-            handle_copy(str(value) + append, str(root) + '/' + str(key) + append)
+                raise UpdateError(
+                    "handle-mapping", "'{}' is neither file nor dir (?!)"
+                    .format(value))
+            handle_copy(str(value) + append, str(root) +
+                        '/' + str(key) + append)
         else:
             logger.debug("Skipping {}".format(key))
+
 
 def verify_mapping(root, mapping):
     for elem in Path(root).iterdir():
@@ -168,7 +179,8 @@ def verify_mapping(root, mapping):
             continue
         node = elem.parts[-1]
         if node not in mapping:
-            logger.error("'{}' is not represented in any mapping!".format(node))
+            logger.error(
+                "'{}' is not represented in any mapping!".format(node))
             continue
         if isinstance(mapping[node], dict):
             verify_mapping(Path(root) / node, mapping[node])
