@@ -17,8 +17,8 @@ set $right l
 set $term alacritty
 # Your preferred application launcher
 # Note: it's recommended that you pass the final command to sway
-set $menu $term -d 80 20 -t aopen --class aopen -e ~/bin/aopen
-for_window [app_id="aopen"] floating enable, border none
+set $menu $term -d 80 20 -t menu --class menu -e ~/bin/menu
+for_window [app_id="menu"] floating enable, border none
 set $passmenu ~/bin/passmenu
 for_window [app_id="passmenu"] floating enable, border none
 
@@ -39,10 +39,10 @@ output eDP-1 resolution 3840x2160 position 0,0 scale 2 subpixel rgb
 # Example configuration:
 #
 exec swayidle -w \
-         timeout 300 'swaylock -f \
+         timeout 300 'swaylock -f -c 000000' \
          timeout 600 'swaymsg "output * dpms off"' \
               resume 'swaymsg "output * dpms on"' \
-         before-sleep 'swaylock -f'
+         before-sleep 'swaylock -f -c 000000'
 
 
 # This will lock your screen after 300 seconds of inactivity, then turn off
@@ -84,7 +84,7 @@ input "2131:308:LEOPOLD_Mini_Keyboard" {
 input "1739:0:Synaptics_TM3418-002" {
     accel_profile adaptive
     click_method button_areas
-    dwt enabled
+    dwt disabled
     natural_scroll enabled
     scroll_method two_finger
     tap enabled
@@ -286,6 +286,7 @@ exec "dbus-update-activation-environment --all"
 exec "/usr/libexec/polkit-gnome-authentication-agent-1"
 exec "mako"
 exec "sudo systemctl restart NetworkManager"
+exec "pactl set-sink-mute @DEFAULT_SINK@ toggle"
 exec_always  "libinput-gestures-setup restart"
 
 include /etc/sway/config.d/*

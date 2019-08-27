@@ -3,14 +3,20 @@
 if [ -z $IN_NIX_SHELL ];then
     PATH="$HOME/.cargo/bin:$PATH" # Rust
     PATH="$HOME/bin:$PATH" # Self-compiled
-    PATH="$PATH:$HOME/.local/bin"  # Pip
+    PATH="$PATH:$HOME/.local/share/npm/bin" # NPM trash
+    PATH="$PATH:$HOME/.local/bin" # Pip
     PATH="$PATH:/opt/xilinx/Vivado/2018.3/bin"
     PATH="$PATH:/sbin:/usr/sbin"
     export PATH
+
+    MANPATH="$MANPATH:$HOME/.local/share/npm/share/man"
+    export MANPATH
 fi
 
 if [ -z $LIBCLANG_PATH ]; then
-    export LIBCLANG_PATH="/usr/lib/llvm/8/lib64"
+    LLVM_VER="8"
+    export LIBCLANG_PATH="/usr/lib/llvm/${LLVM_VER}/lib64"
+    export PATH="$PATH:/usr/lib/llvm/${LLVM_VER}/bin"
 fi
 
 export SSH_KEY_PATH="$HOME/.ssh/id_rsa"
@@ -72,6 +78,28 @@ bindkey "^[[1;5D" backward-word
 bindkey "^[[1;3D" backward-word
 bindkey -s "^O" 'nvim $(sk -m)^M'
 
+# Utility functions
+function pupd() {
+    local freeze="$(pip list --user --format=freeze --outdated)"
+    if [ -z "${freeze}" ]; then
+        echo "Nothing to do."
+    else
+        local pkgs="$(echo ${freeze} | cut -f 1 -d '\' | tr '\n' ' ')"
+        pip install --user -U "${pkgs}"
+    fi
+}
+
+function ldd() {
+    /usr/bin/ldd ${@} \
+    | grep so \
+    | sed -e '/^[^\t]/ d' \
+    | sed -e 's/\t//' \
+    | sed -e 's/.*=..//' \
+    | sed -e 's/ (0.*)//' \
+    | sort \
+    | uniq -c \
+    | sort -n
+}
 # Some useful aliases
 ## Tmux
 alias tmux="tmux -f $XDG_CONFIG_HOME/tmux/tmux.conf"
@@ -144,18 +172,10 @@ alias mnt="upd && upg && dcl && sudo emaint -f all && ecl"
 alias rch="repoman -dx full"
 alias rcm="repoman commit"
 alias rma="repoman manifest"
-
-function ldd() {
-    /usr/bin/ldd ${@} \
-    | grep so \
-    | sed -e '/^[^\t]/ d' \
-    | sed -e 's/\t//' \
-    | sed -e 's/.*=..//' \
-    | sed -e 's/ (0.*)//' \
-    | sort \
-    | uniq -c \
-    | sort -n
-}
+## NPM trash
+alias nupd="npm -g upgrade"
+## Local updates
+alias lupd="zplug update && nupd && pupd"
 
 # added by travis gem
 [ -f /home/bemeurer/.travis/travis.sh ] && source /home/bemeurer/.travis/travis.sh
