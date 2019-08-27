@@ -156,7 +156,7 @@ def handle_mapping(root, mapping):
         elif isinstance(value, Path):
             logger.debug("Handling {} as copy".format(key))
             if not value.exists():
-                logger.error("Node '{}' does not exist".format(value))
+                logger.warning("Node '{}' does not exist".format(value))
                 continue
             if value.is_file():
                 append = ''
