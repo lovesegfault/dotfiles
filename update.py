@@ -3,7 +3,7 @@
 import os
 import platform
 from pathlib import Path
-from subprocess import check_output
+from subprocess import check_output  # nosec
 
 from gitignore_parser import parse_gitignore
 from logzero import logger, logging, loglevel
@@ -94,7 +94,7 @@ config_mapping = {
 # Mapping scripts
 bin_mapping = {
     "aim": get_bin_dir() / "aim",
-    "aopen": get_bin_dir() / "aopen",
+    "menu": get_bin_dir() / "menu",
     "bimp": get_bin_dir() / "bimp",
     "checkiommu": get_bin_dir() / "checkiommu",
     "fixhd": get_bin_dir() / "fixhd",
@@ -126,69 +126,70 @@ root_mapping = {
 }
 
 
-def make_dir(dst):
-    cmd = ["mkdir", "-p", str(dst)]
-    logger.debug(cmd)
-    output = check_output(cmd)
-    logger.debug(output)
-
-# Copies file or directory. In the latter it will delete files in the
-# destination not in the source.
-
-
 def handle_copy(src, dst):
+    """
+        Copies file or directory. In the latter it will delete files in the
+        destination not in the source.
+    """
+    # Work around the fact that rsync is weird
+    if Path(src).is_dir():
+        src = str(src) + '/'
+    # Construct the command, ignore links and purge outdated files
     cmd = ["rsync", "-Pav", "--no-links", "--delete", str(src),
            str(dst)]
     logger.debug(cmd)
-    output = check_output(cmd)
+    output = check_output(cmd)  # nosec
     logger.debug(output)
 
-# Transverse a mapping, copying leaf nodes to their destination
 
-
-def handle_mapping(root, mapping):
-    logger.debug("Mapping with root {}".format(root))
-    for key in mapping:
-        value = mapping[key]
+def update_mapping(root, mapping):
+    """
+        Transverse a mapping, copying leaf nodes to their destination
+    """
+    logger.debug(">>>> Mapping with root {}".format(root))
+    for node in mapping:
+        value = mapping[node]
         if isinstance(value, dict):
-            logger.debug("Handling {} as mapping".format(key))
-            handle_mapping(str(key) + '/', value)
+            logger.info("Updating {} mapping".format(node))
+            new_root = Path(root) / str(node)
+            update_mapping(new_root, value)
         elif isinstance(value, Path):
-            logger.debug("Handling {} as copy".format(key))
+            logger.debug("Copying {}".format(node))
+            # Skip & report broken nodes
             if not value.exists():
-                logger.warning("Node '{}' does not exist".format(value))
                 continue
-            if value.is_file():
-                append = ''
-            elif value.is_dir():
-                append = '/'
-                make_dir(str(root) + '/' + str(key) + append)
-            else:
-                raise UpdateError(
-                    "handle-mapping", "'{}' is neither file nor dir (?!)"
-                    .format(value))
-            handle_copy(str(value) + append, str(root) +
-                        '/' + str(key) + append)
+            # Construct node & value paths
+            node_path = Path(root) / str(node)
+            value_path = Path(value)
+            if value_path.is_dir():
+                value_path.mkdir(parents=True, exist_ok=True)
+            # Finaly perform the copy
+            handle_copy(value_path, node_path)
         else:
-            logger.debug("Skipping {}".format(key))
+            logger.debug("Skipping {}".format(node))
 
 
 def verify_mapping(root, mapping):
+    """
+        Transverse root, enforcing all files in repo are represented in
+        mappings.
+    """
     for elem in Path(root).iterdir():
+        # Make sure we're only verifying valid files
         if gitignore(elem) or elem.parts[-1] == '.git':
             continue
+        # The node names are just the last element in the path
         node = elem.parts[-1]
         if node not in mapping:
             logger.error(
                 "'{}' is not represented in any mapping!".format(node))
             continue
         if isinstance(mapping[node], dict):
-            verify_mapping(Path(root) / node, mapping[node])
+            logger.info("Verifying {} mapping".format(node))
+            new_root = Path(root) / node
+            verify_mapping(new_root, mapping[node])
 
 
 loglevel(level=logging.INFO)
-logger.info("Updating dotfiles")
-handle_mapping(script_dir, root_mapping)
-logger.info("Verifying")
+update_mapping(script_dir, root_mapping)
 verify_mapping(script_dir, root_mapping)
-logger.info("DONE")
