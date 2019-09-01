@@ -6,8 +6,6 @@ logfile="/tmp/wm.log"
 DISPLAY=':0'
 dbus-update-activation-environment --all > "${logfile}" 2>&1
 
-#echo "Starting polkit-gnome"
-#/usr/libexec/polkit-gnome-authentication-agent-1 &
 #echo "Starting gnome-keyring"
 eval "$(/usr/bin/gnome-keyring-daemon --daemonize --start --components=pkcs11,secrets,ssh,gpg)"
 export GNOME_KEYRING_CONTROL
@@ -28,9 +26,6 @@ export ECORE_EVAS_ENGINE=wayland_egl
 export ELM_ENGINE=wayland_egl
 # sdl
 export SDL_VIDEODRIVER=wayland
-#gnome
-export XDG_CURRENT_DESKTOP=GNOME
-export DESKTOP_SESSION=gnome
 #ff
 export MOZ_ENABLE_WAYLAND=1
 

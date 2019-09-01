@@ -1,4 +1,11 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =2
+let g:netrw_dirhist_cnt =9
 let g:netrw_dirhist_1='/home/bemeurer/src/standard/sendfd'
 let g:netrw_dirhist_2='/home/bemeurer/src/Waybar/resources/custom_modules'
+let g:netrw_dirhist_3='/home/bemeurer/.yarn'
+let g:netrw_dirhist_4='/home/bemeurer/src/gentoo/dev-python/sphinxcontrib-newsfeed'
+let g:netrw_dirhist_5='/home/bemeurer/src/essentia/doc/build'
+let g:netrw_dirhist_6='/home/bemeurer/src/essentia/packaging/darwin'
+let g:netrw_dirhist_7='/home/bemeurer'
+let g:netrw_dirhist_8='/home/bemeurer/bin'
+let g:netrw_dirhist_9='/home/bemeurer/src/gentoo/media-plugins/gst-plugins-meta'

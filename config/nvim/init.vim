@@ -9,6 +9,7 @@ else
     Plug 'roxma/nvim-yarp'
     Plug 'roxma/vim-hug-neovim-rpc'
 endif
+Plug 'dag/vim-fish'
 Plug 'Shougo/neco-syntax'
 Plug 'Shougo/neosnippet-snippets'
 Plug 'ayu-theme/ayu-vim'
@@ -260,6 +261,8 @@ let g:ale_fixers = {
     \ 'c':['remove_trailing_lines', 'trim_whitespace', 'clang-format'],
     \ 'cpp':['remove_trailing_lines', 'trim_whitespace', 'clang-format'],
     \ 'ebuild':['remove_trailing_lines', 'trim_whitespace'],
+    \ 'fish':['remove_trailing_lines', 'trim_whitespace'],
+    \ 'gentoo-metadata':['remove_trailing_lines', 'trim_whitespace', 'xmllint'],
     \ 'i3':['remove_trailing_lines', 'trim_whitespace'],
     \ 'json':['remove_trailing_lines', 'trim_whitespace', 'prettier', 'fixjson'],
     \ 'nix':['remove_trailing_lines', 'trim_whitespace'],
@@ -267,4 +270,5 @@ let g:ale_fixers = {
     \ 'rust':['remove_trailing_lines', 'trim_whitespace','rustfmt'],
     \ 'sh':['shfmt','remove_trailing_lines','trim_whitespace'],
     \ 'toml':['remove_trailing_lines', 'trim_whitespace'],
+    \ 'xml':['remove_trailing_lines', 'trim_whitespace', 'xmllint'],
     \ }

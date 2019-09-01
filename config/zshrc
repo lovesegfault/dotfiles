@@ -48,7 +48,6 @@ export PAGER="less"
 export CCACHE_DIR="/gentoo/ccache"
 export GOPATH="$HOME/.cache/go"
 export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_CURRENT_DESKTOP="Unity"
 
 # zplug
 export ZPLUG_HOME=$HOME/.zplug
@@ -139,6 +138,7 @@ alias gm="git merge"
 alias gp="git push"
 alias gpl="git pull --rebase"
 alias gr="git rebase"
+alias grsn="git rebase --exec 'git commit --amend --no-edit -n -S'"
 ## Cargo
 alias c="cargo"
 alias cb="cargo build"
