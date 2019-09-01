@@ -2,6 +2,7 @@
 
 import os
 import platform
+import inspect
 from pathlib import Path
 from subprocess import check_output  # nosec
 
@@ -146,12 +147,14 @@ def update_mapping(root, mapping):
     """
         Transverse a mapping, copying leaf nodes to their destination
     """
+    if len(inspect.stack()) == 2:
+        logger.info("Updating root mapping")
     logger.debug(">>>> Mapping with root {}".format(root))
     for node in mapping:
         value = mapping[node]
         if isinstance(value, dict):
-            logger.info("Updating {} mapping".format(node))
             new_root = Path(root) / str(node)
+            logger.info("Updating {} mapping".format(node))
             update_mapping(new_root, value)
         elif isinstance(value, Path):
             logger.debug("Copying {}".format(node))
@@ -174,6 +177,8 @@ def verify_mapping(root, mapping):
         Transverse root, enforcing all files in repo are represented in
         mappings.
     """
+    if len(inspect.stack()) == 2:
+        logger.info("Verifying root mapping")
     for elem in Path(root).iterdir():
         # Make sure we're only verifying valid files
         if gitignore(elem) or elem.parts[-1] == '.git':
@@ -185,8 +190,8 @@ def verify_mapping(root, mapping):
                 "'{}' is not represented in any mapping!".format(node))
             continue
         if isinstance(mapping[node], dict):
-            logger.info("Verifying {} mapping".format(node))
             new_root = Path(root) / node
+            logger.info("Verifying {} mapping".format(node))
             verify_mapping(new_root, mapping[node])
 
 
