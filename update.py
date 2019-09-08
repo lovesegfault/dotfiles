@@ -153,8 +153,8 @@ def update_mapping(root, mapping):
     for node in mapping:
         value = mapping[node]
         if isinstance(value, dict):
-            new_root = Path(root) / str(node)
             logger.info("Updating {} mapping".format(node))
+            new_root = Path(root) / str(node)
             update_mapping(new_root, value)
         elif isinstance(value, Path):
             logger.debug("Copying {}".format(node))
@@ -190,8 +190,8 @@ def verify_mapping(root, mapping):
                 "'{}' is not represented in any mapping!".format(node))
             continue
         if isinstance(mapping[node], dict):
-            new_root = Path(root) / node
             logger.info("Verifying {} mapping".format(node))
+            new_root = Path(root) / node
             verify_mapping(new_root, mapping[node])
 
 
