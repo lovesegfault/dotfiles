@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 
 import os
+import datetime
 import platform
 import inspect
 from pathlib import Path
@@ -127,6 +128,44 @@ root_mapping = {
 }
 
 
+def run(cmd):
+    logger.debug(cmd)
+    output = check_output(cmd)  # nosec
+    logger.debug(output)
+
+
+def git_pull():
+    """
+        Pulls git origin
+    """
+    cmd = ["git", "pull"]
+    run(cmd)
+
+
+def git_add(path):
+    """
+        Stages file in `path`
+    """
+    cmd = ["git", "add", str(path)]
+    run(cmd)
+
+
+def git_commit(msg):
+    """
+        Commits with `msg`
+    """
+    cmd = ["git", "commit", "-m", str(msg)]
+    run(cmd)
+
+
+def git_push():
+    """
+        Pushes to git origin
+    """
+    cmd = ["git", "push"]
+    run(cmd)
+
+
 def handle_copy(src, dst):
     """
         Copies file or directory. In the latter it will delete files in the
@@ -138,9 +177,7 @@ def handle_copy(src, dst):
     # Construct the command, ignore links and purge outdated files
     cmd = ["rsync", "-Pav", "--no-links", "--delete", str(src),
            str(dst)]
-    logger.debug(cmd)
-    output = check_output(cmd)  # nosec
-    logger.debug(output)
+    run(cmd)
 
 
 def update_mapping(root, mapping):
@@ -195,6 +232,35 @@ def verify_mapping(root, mapping):
             verify_mapping(new_root, mapping[node])
 
 
+def sync_mapping(root, mapping):
+    """
+        Transverse mapping, staging changes to mapped files and syncing them to
+        git.
+    """
+    loglevel(level=logging.DEBUG)
+    if len(inspect.stack()) == 2:
+        logger.info("Syncing root mapping")
+    for node in mapping:
+        value = mapping[node]
+        if isinstance(value, dict):
+            logger.info("Syncing {} mapping".format(node))
+            new_root = Path(root) / str(node)
+            sync_mapping(new_root, value)
+        elif isinstance(value, Path):
+            node_path = Path(root) / str(node)
+            logger.debug(">>> node_path = {}".format(node_path))
+            git_add(node_path)
+            now = datetime.datetime.now().strftime("%Y-%m-%d-%H:%M:%S-%Z")
+            category = str(node_path.parts[-2])
+            name = str(node_path.parts[-1])
+            msg = "{}/{}: sync @ {}".format(category, name, now)
+            git_commit(msg)
+        else:
+            logger.debug("Skipping {}".format(node))
+    pass
+
+
 loglevel(level=logging.INFO)
 update_mapping(script_dir, root_mapping)
 verify_mapping(script_dir, root_mapping)
+sync_mapping(script_dir, root_mapping)
