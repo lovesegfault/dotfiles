@@ -11,9 +11,9 @@ from subprocess import check_output, CalledProcessError  # nosec
 from gitignore_parser import parse_gitignore
 from logzero import logger, logging, loglevel
 
-home_path = Path(os.environ['HOME'])
+home_path = Path(os.environ["HOME"])
 script_path = Path(os.path.dirname(os.path.realpath(__file__)))
-gitignore = parse_gitignore(script_path / '.gitignore')
+gitignore = parse_gitignore(script_path / ".gitignore")
 system = platform.system()
 
 
@@ -161,7 +161,7 @@ def handle_copy(src, dst):
     """
     # Work around the fact that rsync is weird
     if Path(src).is_dir():
-        src = str(src) + '/'
+        src = str(src) + "/"
     # Construct the command, ignore links and purge outdated files
     cmd = ["rsync", "-Pav", "--no-links", "--delete", str(src),
            str(dst)]
@@ -211,7 +211,7 @@ def verify_mapping(root, mapping):
         logger.info("Verifying root mapping")
     for elem in Path(root).iterdir():
         # Make sure we're only verifying valid files
-        if gitignore(elem) or elem.parts[-1] == '.git':
+        if gitignore(elem) or elem.parts[-1] == ".git":
             continue
         # The node names are just the last element in the path
         node = elem.parts[-1]
