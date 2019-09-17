@@ -17,8 +17,10 @@ gitignore = parse_gitignore(script_path / '.gitignore')
 system = platform.system()
 
 
-# Gets the expected directory for pictures, depending on the OS
 def picture_path():
+    """
+        Gets the expected directory for pictures, depending on the OS
+    """
     if system == "Linux":
         return home_path / "pictures"
     elif system == "Darwin":
@@ -28,8 +30,10 @@ def picture_path():
         sys.exit(1)
 
 
-# Gets the expected directory for pictures, depending on the OS
 def doc_path():
+    """
+        Gets the expected directory for pictures, depending on the OS
+    """
     if system == "Linux":
         return home_path / "docs"
     elif system == "Darwin":
@@ -39,8 +43,10 @@ def doc_path():
         sys.exit(1)
 
 
-# Gets the expected directory for config files, depending on the OS
 def config_path():
+    """
+        Gets the expected directory for config files, depending on the OS
+    """
     if system == "Linux":
         return home_path / ".config"
     elif system == "Darwin":
@@ -50,8 +56,10 @@ def config_path():
         sys.exit(1)
 
 
-# Gets the expected directory for config files, depending on the OS
 def bin_path():
+    """
+        Gets the expected directory for config files, depending on the OS
+    """
     if system == "Linux":
         return home_path / "bin"
     elif system == "Darwin":
