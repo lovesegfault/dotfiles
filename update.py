@@ -261,6 +261,14 @@ def sync_mapping(root, mapping):
             git_commit(msg)
         else:
             logger.debug("Skipping {}".format(node))
+
+
+def update_kernel(root, mapping):
+    """
+        Detect currently available kernel sources, copies, and syncs them to
+        the tree.
+    """
+    logger.info("Updating kernel")
     pass
 
 
@@ -268,3 +276,6 @@ loglevel(level=logging.INFO)
 update_mapping(script_path, root_mapping)
 verify_mapping(script_path, root_mapping)
 sync_mapping(script_path, root_mapping)
+
+if system == "Linux":
+    update_kernel(script_path, root_mapping)
