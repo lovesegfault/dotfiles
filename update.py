@@ -4,6 +4,7 @@ import os
 import datetime
 import platform
 import inspect
+import sys
 from pathlib import Path
 from subprocess import check_output, CalledProcessError  # nosec
 
@@ -16,19 +17,6 @@ gitignore = parse_gitignore(script_path / '.gitignore')
 system = platform.system()
 
 
-class UpdateError(BaseException):
-    """ Raised for errors during dotfile update process.
-
-    Attributes:
-        stage - Stage where the error happened
-        message - Explanation
-    """
-
-    def __init__(self, stage, message):
-        self.stage = stage
-        self.message = message
-
-
 # Gets the expected directory for pictures, depending on the OS
 def picture_path():
     if system == "Linux":
@@ -36,7 +24,8 @@ def picture_path():
     elif system == "Darwin":
         return home_path / "Pictures"
     else:
-        raise UpdateError("root-mapping", "Unknown OS: {}".format(system))
+        logger.error("Unknown OS: {}".format(system))
+        sys.exit(1)
 
 
 # Gets the expected directory for pictures, depending on the OS
@@ -46,7 +35,8 @@ def doc_path():
     elif system == "Darwin":
         return home_path / "Documents"
     else:
-        raise UpdateError("root-mapping", "Unknown OS: {}".format(system))
+        logger.error("Unknown OS: {}".format(system))
+        sys.exit(1)
 
 
 # Gets the expected directory for config files, depending on the OS
@@ -56,7 +46,8 @@ def config_path():
     elif system == "Darwin":
         return home_path / ".config"
     else:
-        raise UpdateError("config-mapping", "Unknown OS: {}".format(system))
+        logger.error("Unknown OS: {}".format(system))
+        sys.exit(1)
 
 
 # Gets the expected directory for config files, depending on the OS
@@ -66,7 +57,8 @@ def bin_path():
     elif system == "Darwin":
         return home_path / "bin"
     else:
-        raise UpdateError("bin-mapping", "Unknown OS: {}".format(system))
+        logger.error("Unknown OS: {}".format(system))
+        sys.exit(1)
 
 
 # Mapping for configuration files
