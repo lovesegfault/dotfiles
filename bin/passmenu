@@ -4,6 +4,7 @@ shopt -s nullglob globstar
 passmenu_path="$(readlink -f $0)"
 passmenu_fifo="/tmp/passmenu_fifo"
 passmenu_lock="/tmp/passmenu_lock"
+passmenu_icon="${HOME}/.config/gopass/gopass-logo-small.png"
 
 function passmenu_lock() {
     if [[ -f "${passmenu_lock}" ]]; then
@@ -46,7 +47,7 @@ function passmenu_backend() {
     fi
 
     gopass show --password "${name}" | wl-copy -o
-    notify-send "✔️ Copied ${name#*/} to clipboard."
+    notify-send -i "${passmenu_icon}" "Copied ${name#*/} to clipboard."
     passmenu_unlock
 }
 
@@ -55,4 +56,3 @@ if [[ -v PASSMENU_BEHAVE_AS_WINDOW ]]; then
 else
     passmenu_backend
 fi
-
