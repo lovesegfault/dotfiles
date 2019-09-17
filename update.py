@@ -239,7 +239,6 @@ def sync_mapping(root, mapping):
         Transverse mapping, staging changes to mapped files and syncing them to
         git.
     """
-    loglevel(level=logging.DEBUG)
     if len(inspect.stack()) == 2:
         logger.info("Syncing root mapping")
     for node in mapping:
