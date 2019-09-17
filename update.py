@@ -12,6 +12,7 @@ from gitignore_parser import parse_gitignore
 from logzero import logger, logging, loglevel
 
 home_path = Path(os.environ["HOME"])
+kernel_path = Path("/usr/src")
 script_path = Path(os.path.dirname(os.path.realpath(__file__)))
 gitignore = parse_gitignore(script_path / ".gitignore")
 system = platform.system()
