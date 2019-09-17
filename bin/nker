@@ -310,4 +310,9 @@ progress "info" "Updating grub "
 grub-mkconfig -o /boot/grub/grub.cfg >> $logfile 2>&1
 print_ok
 
+# Update /etc/issue
+progress "info" "Updating /etc/issue "
+linux_logo -L 2 | sed '/^$/d' > /etc/issue
+print_ok
+
 progress "header" "Done!\n"
