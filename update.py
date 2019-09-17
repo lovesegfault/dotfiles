@@ -138,14 +138,6 @@ def run(cmd):
         return False
 
 
-def git_pull():
-    """
-        Pulls git origin
-    """
-    cmd = ["git", "pull"]
-    return run(cmd)
-
-
 def git_add(path):
     """
         Stages file in `path`
@@ -159,14 +151,6 @@ def git_commit(msg):
         Commits with `msg`
     """
     cmd = ["git", "commit", "-m", str(msg)]
-    return run(cmd)
-
-
-def git_push():
-    """
-        Pushes to git origin
-    """
-    cmd = ["git", "push"]
     return run(cmd)
 
 
