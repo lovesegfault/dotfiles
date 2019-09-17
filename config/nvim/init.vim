@@ -2,10 +2,12 @@
 call plug#begin('~/.local/share/nvim/plugged')
 if has('nvim')
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-    Plug 'Shougo/neosnippet.vim'
+    Plug 'Shougo/neosnippet.vim', { 'do': ':UpdateRemotePlugins' }
+    Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
 else
     Plug 'Shougo/deoplete.nvim'
     Plug 'Shougo/neosnippet.vim'
+    Plug 'Shougo/defx.nvim'
     Plug 'roxma/nvim-yarp'
     Plug 'roxma/vim-hug-neovim-rpc'
 endif
@@ -265,6 +267,7 @@ let g:ale_fixers = {
     \ 'gentoo-metadata':['remove_trailing_lines', 'trim_whitespace', 'xmllint'],
     \ 'i3':['remove_trailing_lines', 'trim_whitespace'],
     \ 'json':['remove_trailing_lines', 'trim_whitespace', 'prettier', 'fixjson'],
+    \ 'markdown':['remove_trailing_lines', 'trim_whitespace', 'prettier'],
     \ 'nix':['remove_trailing_lines', 'trim_whitespace'],
     \ 'python':['remove_trailing_lines', 'trim_whitespace', 'isort', 'autopep8'],
     \ 'rust':['remove_trailing_lines', 'trim_whitespace','rustfmt'],
