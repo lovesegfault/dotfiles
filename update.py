@@ -5,7 +5,7 @@ import datetime
 import platform
 import inspect
 from pathlib import Path
-from subprocess import check_output  # nosec
+from subprocess import check_output, CalledProcessError  # nosec
 
 from gitignore_parser import parse_gitignore
 from logzero import logger, logging, loglevel
@@ -130,8 +130,12 @@ root_mapping = {
 
 def run(cmd):
     logger.debug(cmd)
-    output = check_output(cmd)  # nosec
-    logger.debug(output)
+    try:
+        output = check_output(cmd)  # nosec
+        logger.debug(output)
+        return True
+    except CalledProcessError:
+        return False
 
 
 def git_pull():
@@ -139,7 +143,7 @@ def git_pull():
         Pulls git origin
     """
     cmd = ["git", "pull"]
-    run(cmd)
+    return run(cmd)
 
 
 def git_add(path):
@@ -147,7 +151,7 @@ def git_add(path):
         Stages file in `path`
     """
     cmd = ["git", "add", str(path)]
-    run(cmd)
+    return run(cmd)
 
 
 def git_commit(msg):
@@ -155,7 +159,7 @@ def git_commit(msg):
         Commits with `msg`
     """
     cmd = ["git", "commit", "-m", str(msg)]
-    run(cmd)
+    return run(cmd)
 
 
 def git_push():
@@ -163,7 +167,7 @@ def git_push():
         Pushes to git origin
     """
     cmd = ["git", "push"]
-    run(cmd)
+    return run(cmd)
 
 
 def handle_copy(src, dst):
@@ -177,16 +181,18 @@ def handle_copy(src, dst):
     # Construct the command, ignore links and purge outdated files
     cmd = ["rsync", "-Pav", "--no-links", "--delete", str(src),
            str(dst)]
-    run(cmd)
+    return run(cmd)
 
 
 def update_mapping(root, mapping):
     """
         Transverse a mapping, copying leaf nodes to their destination
     """
+    # Mildly nasty
     if len(inspect.stack()) == 2:
         logger.info("Updating root mapping")
     logger.debug(">>>> Mapping with root {}".format(root))
+    # Recursively iterate over the mapping
     for node in mapping:
         value = mapping[node]
         if isinstance(value, dict):
@@ -204,7 +210,9 @@ def update_mapping(root, mapping):
             if value_path.is_dir():
                 value_path.mkdir(parents=True, exist_ok=True)
             # Finaly perform the copy
-            handle_copy(value_path, node_path)
+            ok = handle_copy(value_path, node_path)
+            if not ok:
+                logger.error("Update failed for {}".format(node))
         else:
             logger.debug("Skipping {}".format(node))
 
@@ -214,6 +222,7 @@ def verify_mapping(root, mapping):
         Transverse root, enforcing all files in repo are represented in
         mappings.
     """
+    # Mildly nasty
     if len(inspect.stack()) == 2:
         logger.info("Verifying root mapping")
     for elem in Path(root).iterdir():
@@ -222,6 +231,7 @@ def verify_mapping(root, mapping):
             continue
         # The node names are just the last element in the path
         node = elem.parts[-1]
+        # Warns about a file with no mapping
         if node not in mapping:
             logger.error(
                 "'{}' is not represented in any mapping!".format(node))
@@ -248,8 +258,11 @@ def sync_mapping(root, mapping):
             sync_mapping(new_root, value)
         elif isinstance(value, Path):
             node_path = Path(root) / str(node)
-            logger.debug(">>> node_path = {}".format(node_path))
-            git_add(node_path)
+            root_path_length = len(script_dir.parts)
+            object_path = Path("/".join(node_path.parts[root_path_length:]))
+            ok = git_add(object_path)
+            if not ok:
+                continue
             now = datetime.datetime.now().strftime("%Y-%m-%d-%H:%M:%S-%Z")
             category = str(node_path.parts[-2])
             name = str(node_path.parts[-1])
