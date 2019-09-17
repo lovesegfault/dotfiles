@@ -132,12 +132,16 @@ alias gch="git checkout"
 alias gcl="git clone"
 alias gd="git difftool"
 alias gf="git fetch --prune --all"
-alias gl="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all"
+alias gl="git log --graph --abbrev-commit --decorate"
 alias gs="git status --find-renames --show-stash"
 alias gm="git merge"
+alias gmc="git merge --continue"
+alias gma="git merge --abort"
 alias gp="git push"
 alias gpl="git pull --rebase"
 alias gr="git rebase"
+alias grc="git rebase --continue"
+alias gra="git rebase --abort"
 alias grsn="git rebase --exec 'git commit --amend --no-edit -n -S'"
 ## Cargo
 alias c="cargo"
@@ -164,9 +168,9 @@ alias xt="cargo xtest"
 alias xtr="cargo xtest --release"
 ## Portage
 alias upd="sudo emerge --sync"
-alias upg="sudo emerge -uDU --keep-going --with-bdeps=y @world"
+alias upg="sudo emerge -UDNAavu --keep-going --with-bdeps=y @world"
 alias dcl="sudo emerge -av --depclean"
-alias ecl="sudo eclean-dist"
+alias ecl="sudo eclean-dist && sudo eclean-pkg"
 alias mnt="upd && upg && dcl && sudo emaint -f all && ecl"
 ## Repoman
 alias rch="repoman -dx full"
@@ -176,6 +180,8 @@ alias rma="repoman manifest"
 alias nupd="npm -g upgrade"
 ## Local updates
 alias lupd="zplug update && nupd && pupd"
+## Sync torrents to seedbox watch folder
+alias utor="rsync -Pav --delete ~/docs/torrents/ viking.whatbox.ca:watch/"
 
 # added by travis gem
 [ -f /home/bemeurer/.travis/travis.sh ] && source /home/bemeurer/.travis/travis.sh
