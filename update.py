@@ -10,9 +10,9 @@ from subprocess import check_output, CalledProcessError  # nosec
 from gitignore_parser import parse_gitignore
 from logzero import logger, logging, loglevel
 
-home_dir = Path(os.environ['HOME'])
-script_dir = Path(os.path.dirname(os.path.realpath(__file__)))
-gitignore = parse_gitignore(script_dir / '.gitignore')
+home_path = Path(os.environ['HOME'])
+script_path = Path(os.path.dirname(os.path.realpath(__file__)))
+gitignore = parse_gitignore(script_path / '.gitignore')
 system = platform.system()
 
 
@@ -30,82 +30,82 @@ class UpdateError(BaseException):
 
 
 # Gets the expected directory for pictures, depending on the OS
-def get_picture_dir():
+def picture_path():
     if system == "Linux":
-        return home_dir / "pictures"
+        return home_path / "pictures"
     elif system == "Darwin":
-        return home_dir / "Pictures"
+        return home_path / "Pictures"
     else:
         raise UpdateError("root-mapping", "Unknown OS: {}".format(system))
 
 
 # Gets the expected directory for pictures, depending on the OS
-def get_documents_dir():
+def doc_path():
     if system == "Linux":
-        return home_dir / "docs"
+        return home_path / "docs"
     elif system == "Darwin":
-        return home_dir / "Documents"
+        return home_path / "Documents"
     else:
         raise UpdateError("root-mapping", "Unknown OS: {}".format(system))
 
 
 # Gets the expected directory for config files, depending on the OS
-def get_config_dir():
+def config_path():
     if system == "Linux":
-        return home_dir / ".config"
+        return home_path / ".config"
     elif system == "Darwin":
-        return home_dir / ".config"
+        return home_path / ".config"
     else:
         raise UpdateError("config-mapping", "Unknown OS: {}".format(system))
 
 
 # Gets the expected directory for config files, depending on the OS
-def get_bin_dir():
+def bin_path():
     if system == "Linux":
-        return home_dir / "bin"
+        return home_path / "bin"
     elif system == "Darwin":
-        return home_dir / "bin"
+        return home_path / "bin"
     else:
         raise UpdateError("bin-mapping", "Unknown OS: {}".format(system))
 
 
 # Mapping for configuration files
 config_mapping = {
-    "Xresources": home_dir / ".Xresources",
-    "alacritty": get_config_dir() / "alacritty",
+    "Xresources": home_path / ".Xresources",
+    "alacritty": config_path() / "alacritty",
     "dracut.conf": Path("/etc/dracut.conf"),
     "fstab": Path("/etc/fstab"),
     "genkernel.conf": Path("/etc/genkernel.conf"),
     "grub": Path("/etc/default/grub"),
-    "gopass": get_config_dir() / "gopass",
-    "i3": get_config_dir() / "i3",
-    "i3status-rs.toml": get_config_dir() / "i3status-rs.toml",
+    "gopass": config_path() / "gopass",
+    "i3": config_path() / "i3",
+    "i3status-rs.toml": config_path() / "i3status-rs.toml",
     "make.conf": Path("/etc/portage/make.conf"),
-    "mako": get_config_dir() / "mako",
-    "nvim": get_config_dir() / "nvim",
-    "rofi": get_config_dir() / "rofi",
-    "sway": get_config_dir() / "sway",
-    "swaylock": get_config_dir() / "swaylock",
+    "mako": config_path() / "mako",
+    "nvim": config_path() / "nvim",
+    "rofi": config_path() / "rofi",
+    "sway": config_path() / "sway",
+    "swaylock": config_path() / "swaylock",
     "tlp.conf": Path("/etc/tlp.conf"),
-    "tmux": get_config_dir() / "tmux",
+    "tmux": config_path() / "tmux",
     "vconsole.conf": Path("/etc/vconsole.conf"),
-    "xinitrc": home_dir / ".xinitrc",
-    "zshrc": home_dir / ".zshrc",
+    "xinitrc": home_path / ".xinitrc",
+    "zshrc": home_path / ".zshrc",
 }
 
 # Mapping scripts
 bin_mapping = {
-    "aim": get_bin_dir() / "aim",
-    "menu": get_bin_dir() / "menu",
-    "bimp": get_bin_dir() / "bimp",
-    "checkiommu": get_bin_dir() / "checkiommu",
-    "fixhd": get_bin_dir() / "fixhd",
-    "fuzzylock": get_bin_dir() / "fuzzylock",
-    "nker": get_bin_dir() / "nker",
-    "passmenu": get_bin_dir() / "passmenu",
-    "prtsc": get_bin_dir() / "prtsc",
-    "testfonts": get_bin_dir() / "testfonts",
-    "wm": get_bin_dir() / "wm",
+    "aim": bin_path() / "aim",
+    "menu": bin_path() / "menu",
+    "bimp": bin_path() / "bimp",
+    "checkiommu": bin_path() / "checkiommu",
+    "fixhd": bin_path() / "fixhd",
+    "fuzzylock": bin_path() / "fuzzylock",
+    "nker": bin_path() / "nker",
+    "passmenu": bin_path() / "passmenu",
+    "prtsc": bin_path() / "prtsc",
+    "testfonts": bin_path() / "testfonts",
+    "wm": bin_path() / "wm",
 }
 
 # Mapping for dotfiles (root) directory.
@@ -123,8 +123,8 @@ root_mapping = {
     "config": config_mapping,
     "update.py": None,
     "kernel": None,
-    "walls": get_picture_dir() / "walls",
-    "papers": get_documents_dir() / "papers"
+    "walls": picture_path() / "walls",
+    "papers": doc_path() / "papers"
 }
 
 
@@ -258,7 +258,7 @@ def sync_mapping(root, mapping):
             sync_mapping(new_root, value)
         elif isinstance(value, Path):
             node_path = Path(root) / str(node)
-            root_path_length = len(script_dir.parts)
+            root_path_length = len(script_path.parts)
             object_path = Path("/".join(node_path.parts[root_path_length:]))
             ok = git_add(object_path)
             if not ok:
@@ -274,6 +274,6 @@ def sync_mapping(root, mapping):
 
 
 loglevel(level=logging.INFO)
-update_mapping(script_dir, root_mapping)
-verify_mapping(script_dir, root_mapping)
-sync_mapping(script_dir, root_mapping)
+update_mapping(script_path, root_mapping)
+verify_mapping(script_path, root_mapping)
+sync_mapping(script_path, root_mapping)
