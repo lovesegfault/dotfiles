@@ -5,6 +5,7 @@ import datetime
 import platform
 import inspect
 import sys
+import re
 from pathlib import Path
 from subprocess import check_output, CalledProcessError  # nosec
 
@@ -262,7 +263,25 @@ def update_kernel(root, mapping):
         the tree.
     """
     logger.info("Updating kernel")
-    pass
+    kernel_regex = re.compile(r"(linux)-(\d+\.\d+\.\d+)-gentoo\Z")
+    for elem in kernel_path.iterdir():
+        logger.debug("Checking {}".format(elem))
+        if elem.is_file():
+            continue
+        if kernel_regex.fullmatch(elem.name):
+            logger.info("Updating {} config".format(elem.name))
+            config_path = elem / ".config"
+            if not config_path.exists():
+                logger.error("Config for {} does not exist".format(elem.name))
+                continue
+            store_path = root / "kernel" / elem.name
+            handle_copy(config_path, store_path)
+            ok = git_add(store_path)
+            if not ok:
+                continue
+            now = datetime.datetime.now().strftime("%Y-%m-%d-%H:%M:%S-%Z")
+            msg = "kernel/{}: sync @ {}".format(elem.name, now)
+            git_commit(msg)
 
 
 loglevel(level=logging.INFO)
