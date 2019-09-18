@@ -12,6 +12,7 @@ from subprocess import check_output, CalledProcessError  # nosec
 from gitignore_parser import parse_gitignore
 from logzero import logger, logging, loglevel
 
+timezone = datetime.datetime.now(datetime.timezone.utc).astimezone().tzname()
 home_path = Path(os.environ["HOME"])
 kernel_path = Path("/usr/src")
 script_path = Path(os.path.dirname(os.path.realpath(__file__)))
@@ -248,7 +249,10 @@ def sync_mapping(root, mapping):
             ok = git_add(object_path)
             if not ok:
                 continue
-            now = datetime.datetime.now().strftime("%Y-%m-%d-%H:%M:%S-%Z")
+            now = datetime.datetime.now().strftime(
+                "%Y-%m-%d-%H:%M:%S-{}"
+                .format(timezone)
+            )
             category = str(node_path.parts[-2])
             name = str(node_path.parts[-1])
             msg = "{}/{}: sync @ {}".format(category, name, now)
@@ -279,7 +283,10 @@ def update_kernel(root, mapping):
             ok = git_add(store_path)
             if not ok:
                 continue
-            now = datetime.datetime.now().strftime("%Y-%m-%d-%H:%M:%S-%Z")
+            now = datetime.datetime.now().strftime(
+                "%Y-%m-%d-%H:%M:%S-{}"
+                .format(timezone)
+            )
             msg = "kernel/{}: sync @ {}".format(elem.name, now)
             git_commit(msg)
 
