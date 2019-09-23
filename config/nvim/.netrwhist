@@ -1,3 +1,4 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =1
-let g:netrw_dirhist_1='/etc/portage/package.mask'
+let g:netrw_dirhistcnt =2
+let g:netrw_dirhist_2='/home/bemeurer/src'
+let g:netrw_dirhist_1='/home/bemeurer'
