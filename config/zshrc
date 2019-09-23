@@ -14,7 +14,7 @@ if [ -z $IN_NIX_SHELL ];then
 fi
 
 if [ -z $LIBCLANG_PATH ]; then
-    LLVM_VER="8"
+    LLVM_VER="9"
     export LIBCLANG_PATH="/usr/lib/llvm/${LLVM_VER}/lib64"
     export PATH="$PATH:/usr/lib/llvm/${LLVM_VER}/bin"
 fi
