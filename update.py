@@ -77,6 +77,7 @@ config_mapping = {
     "Xresources": home_path / ".Xresources",
     "alacritty": config_path() / "alacritty",
     "dracut.conf": Path("/etc/dracut.conf"),
+    "dracut.conf.d": Path("/etc/dracut.conf.d"),
     "fstab": Path("/etc/fstab"),
     "genkernel.conf": Path("/etc/genkernel.conf"),
     "grub": Path("/etc/default/grub"),
