@@ -11,14 +11,14 @@
 GRUB_DISTRIBUTOR="Gentoo"
 
 # Default menu entry
-GRUB_DEFAULT=0
+#GRUB_DEFAULT=0
 
 # Boot the default entry this many seconds after the menu is displayed
-GRUB_TIMEOUT=2
-GRUB_TIMEOUT_STYLE=menu
+#GRUB_TIMEOUT=5
+#GRUB_TIMEOUT_STYLE=menu
 
 # Append parameters to the linux kernel command line
-GRUB_CMDLINE_LINUX="root=ZFS=vault/ROOT/gentoo rw rd.shell zfs_force=1"
+#GRUB_CMDLINE_LINUX=""
 #
 # Examples:
 #
@@ -29,9 +29,7 @@ GRUB_CMDLINE_LINUX="root=ZFS=vault/ROOT/gentoo rw rd.shell zfs_force=1"
 # GRUB_CMDLINE_LINUX="init=/usr/lib/systemd/systemd"
 
 # Append parameters to the linux kernel command line for non-recovery entries
-GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=2 rd.systemd.show_status=auto rd.udev.log_priority=3 i915.fastboot=1 vga=current intel_iommu=on psmouse.synaptics_intertouch=1"
-
-GRUB_FONT="/boot/grub/fonts/hack24.pf2"
+#GRUB_CMDLINE_LINUX_DEFAULT=""
 
 # Uncomment to disable graphical terminal (grub-pc only)
 #GRUB_TERMINAL=console
