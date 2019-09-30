@@ -183,7 +183,7 @@ alias nupd="npm -g upgrade"
 ## Local updates
 alias lupd="zplug update && nupd && pupd"
 ## Sync torrents to seedbox watch folder
-alias utor="rsync -Pav --delete ~/docs/torrents/ viking.whatbox.ca:watch/"
+alias tupd="rsync -Pav --delete ~/doc/torrents/ viking.whatbox.ca:watch/"
 
 # added by travis gem
 [ -f /home/bemeurer/.travis/travis.sh ] && source /home/bemeurer/.travis/travis.sh
