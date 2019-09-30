@@ -2,27 +2,22 @@
 call plug#begin('~/.local/share/nvim/plugged')
 if has('nvim')
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-    Plug 'Shougo/neosnippet.vim', { 'do': ':UpdateRemotePlugins' }
-    Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
 else
     Plug 'Shougo/deoplete.nvim'
-    Plug 'Shougo/neosnippet.vim'
-    Plug 'Shougo/defx.nvim'
     Plug 'roxma/nvim-yarp'
     Plug 'roxma/vim-hug-neovim-rpc'
 endif
-Plug 'dag/vim-fish'
 Plug 'Shougo/neco-syntax'
-Plug 'Shougo/neosnippet-snippets'
 Plug 'ayu-theme/ayu-vim'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'cespare/vim-toml'
+Plug 'dag/vim-fish'
 Plug 'dcharbon/vim-flatbuffers'
 Plug 'dense-analysis/ale'
 Plug 'deoplete-plugins/deoplete-clang'
-Plug 'fszymanski/deoplete-emoji'
 Plug 'gentoo/gentoo-syntax'
 Plug 'igankevich/mesonic'
+Plug 'itchyny/lightline.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'lervag/vimtex'
 Plug 'liuchengxu/graphviz.vim'
@@ -43,9 +38,6 @@ Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
 Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-surround'
 Plug 'uarun/vim-protobuf'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'wellle/tmux-complete.vim'
 call plug#end()
 
 " Settings
@@ -179,29 +171,10 @@ endif
 " Plugin settings
 " ---- Shougo/deoplete.nvim
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#sources#clang#libclang_path = "/usr/lib/llvm/8/lib64/libclang.so"
-let g:deoplete#sources#clang#clang_header = "/usr/lib/llvm/8/include/clang"
+let g:deoplete#sources#clang#libclang_path = "/usr/lib/llvm/9/lib64/libclang.so"
+let g:deoplete#sources#clang#clang_header = "/usr/lib/llvm/9/include/clang"
 
 call deoplete#custom#source('tabnine', 'rank', 100)
-" Plugin key-mappings.
-" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
-
-" SuperTab like snippets behavior.
-" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
-imap <expr><TAB>
-            \ pumvisible() ? "\<C-n>" :
-            \ neosnippet#expandable_or_jumpable() ?
-            \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-            \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
-" For conceal markers.
-if has('conceal')
-    set conceallevel=2 concealcursor=niv
-endif
 " ---- luochen1990/rainbow
 let g:rainbow_active = 1
 " ---- lotabout/skim.vim
@@ -220,25 +193,17 @@ command -nargs=+ -complete=file -bar Rg silent! grep! <args>|cwindow|redraw!
 " ---- lervag/vimtex
 call deoplete#custom#var('omni', 'input_patterns', {'tex': g:vimtex#re#deoplete})
 let g:vimtex_compiler_latexmk = {
-            \ 'options' : [
-            \   '-pdf',
-            \   '-shell-escape',
-            \   '-verbose',
-            \   '-file-line-error',
-            \   '-synctex=1',
-            \   '-interaction=nonstopmode',
-            \ ],
-            \}
+    \ 'options' : [
+    \   '-pdf',
+    \   '-shell-escape',
+    \   '-verbose',
+    \   '-file-line-error',
+    \   '-synctex=1',
+    \   '-interaction=nonstopmode',
+    \ ],
+\ }
 let g:vimtex_compiler_progname = 'nvr'
 let g:vimtex_view_general_viewer = 'evince'
-
-" ---- vim-airline/vim-airline
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tagbar#enabled = 1
-let g:airline_powerline_fonts = 1
-let g:airline_highlighting_cache = 1
-let g:airline#extensions#ale#enabled = 1
-let g:airline_theme='ayu_dark'
 " ---- nathanaelkane/vim-indent-guides
 let g:indent_guides_enable_on_vim_startup = 1
 " ---- ayu-theme/ayu-vim
@@ -258,13 +223,13 @@ let g:ale_linters = {
     \ 'python': ['bandit', 'pylama', 'vulture'],
     \ 'rust': ['rls'],
     \ 'text':['proselint', 'languagetool'],
-    \ }
+\ }
 let g:ale_fixers = {
     \ 'c':['remove_trailing_lines', 'trim_whitespace', 'clang-format'],
     \ 'cpp':['remove_trailing_lines', 'trim_whitespace', 'clang-format'],
     \ 'ebuild':['remove_trailing_lines', 'trim_whitespace'],
     \ 'fish':['remove_trailing_lines', 'trim_whitespace'],
-    \ 'gentoo-metadata':['remove_trailing_lines', 'trim_whitespace', 'xmllint'],
+    \ 'gentoo-metadata':['remove_trailing_lines', 'trim_whitespace'],
     \ 'i3':['remove_trailing_lines', 'trim_whitespace'],
     \ 'json':['remove_trailing_lines', 'trim_whitespace', 'prettier', 'fixjson'],
     \ 'markdown':['remove_trailing_lines', 'trim_whitespace', 'prettier'],
@@ -273,5 +238,9 @@ let g:ale_fixers = {
     \ 'rust':['remove_trailing_lines', 'trim_whitespace','rustfmt'],
     \ 'sh':['shfmt','remove_trailing_lines','trim_whitespace'],
     \ 'toml':['remove_trailing_lines', 'trim_whitespace'],
-    \ 'xml':['remove_trailing_lines', 'trim_whitespace', 'xmllint'],
-    \ }
+    \ 'xml':['remove_trailing_lines', 'trim_whitespace'],
+\ }
+" ---- itchyny/lightline.vim
+let g:lightline = {
+    \ 'colorscheme': 'ayu',
+\ }
