@@ -306,8 +306,8 @@ find "/boot" -maxdepth 1 -name \*.old -type f -delete
 print_ok
 
 # Update Grub
-progress "info" "Updating grub "
-grub-mkconfig -o /boot/grub/grub.cfg >> $logfile 2>&1
-print_ok
+# progress "info" "Updating grub "
+# grub-mkconfig -o /boot/grub/grub.cfg >> $logfile 2>&1
+# print_ok
 
 progress "header" "Done!\n"
