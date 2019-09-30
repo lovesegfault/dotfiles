@@ -1,0 +1,28 @@
+[user]
+    name = Bernardo Meurer
+    email = meurerbernardo@gmail.com
+    signingkey = 589412CE19DF582AE10A3320E421C74191EA186C
+[commit]
+    gpgsign = on
+[core]
+    editor = nvim
+    askpass = /usr/libexec/seahorse/ssh-askpass
+[merge]
+    tool = nvimdiff
+[mergetool]
+    prompt = true
+[mergetool "nvimdiff"]
+    cmd = nvim -d $LOCAL $REMOTE
+[difftool]
+    prompt = true
+[diff]
+    tool = nvimdiff
+[github]
+    user = lovesegfault
+[credential]
+    helper = /usr/libexec/git-core/git-credential-libsecret
+[filter "lfs"]
+    process = git-lfs filter-process
+    required = true
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
