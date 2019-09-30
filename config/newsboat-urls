@@ -1,0 +1,34 @@
+"query:News:tags # \"news\""
+"query:Comics:tags # \"comics\""
+"query:Gentoo:tags # \"gentoo\""
+"query:Releases:tags # \"releases\""
+---
+https://news.ycombinator.com/rss                          "~Hacker News"                           news
+https://lwn.net/headlines/newrss                          "~LWN"                                   news
+http://n-gate.com/index.rss                               "~n-gate"                                news
+https://www.phoronix.com/phoronix-rss.php                 "~Phoronix"                              news
+https://www.quantamagazine.org/feed                       "~Quanta Magazine"                       news
+https://stallman.org/rss/rss.xml                          "~Richard Stallman's Political Notes"    news
+https://semiaccurate.com/feed/                            "~SemiAccurate"                          news
+https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml "~The New York Times"                    news
+---
+https://www.smbc-comics.com/rss.php    "~Saturday Morning Breakfast Cereal"    comics
+https://xkcd.com/rss.xml               "~XKCD"                                 comics
+---
+https://bugs.gentoo.org/buglist.cgi?email1=bernardo%40standard.ai&emailreporter1=1&emailtype1=substring&list_id=4339928&query_format=advanced&resolution=---&title=Bug%20List&ctype=atom       "~Gentoo Reported"    gentoo
+https://bugs.gentoo.org/buglist.cgi?email1=bernardo%40standard.ai&emailassigned_to1=1&emailtype1=substring&list_id=4339930&query_format=advanced&resolution=---&title=Bug%20List&ctype=atom    "~Gentoo Assigned"    gentoo
+---
+https://github.com/neovim/neovim/releases.atom                                 "~app-editors/neovim"                            releases
+https://github.com/elementary/granite/releases.atom                            "~dev-libs/granite"                              releases
+http://feeds.launchpad.net/libvterm/revisions.atom                             "~dev-libs/libvterm"                             releases
+https://github.com/luvit/luv/releases.atom                                     "~dev-lua/luv"                                   releases
+https://github.com/beetbox/confuse/releases.atom                               "~dev-python/confuse"                            releases
+https://github.com/beetbox/mediafile/releases.atom                             "~dev-python/mediafile"                          releases
+https://github.com/sphinx-contrib/sphinx-pretty-searchresults/releases.atom    "~dev-python/sphinxcontrib-pretty-searchresults" releases
+https://github.com/emersion/grim/releases.atom                                 "~gui-apps/grim"                                 releases
+https://github.com/emersion/slurp/releases.atom                                "~gui-apps/slurp"                                releases
+https://github.com/Alexays/Waybar/releases.atom                                "~gui-apps/waybar"                               releases
+https://github.com/FortAwesome/Font-Awesome/releases.atom                      "~media-fonts/font-awesome"                      releases
+https://gitlab.gnome.org/GNOME/gexiv2/-/tags?format=atom                       "~media-libs/gexiv2"                             releases
+https://github.com/beetbox/beets/releases.atom                                 "~media-sound/beets"                             releases
+https://github.com/AravisProject/aravis/releases.atom                          "~media-video/aravis"                            releases
