@@ -1,5 +1,5 @@
 ignore-empty-password
-image=/home/bemeurer/pictures/walls/clouds.jpg
+image=~/pic/walls/clouds.jpg
 indicator-caps-lock
 scaling=fill
 show-failed-attempts
