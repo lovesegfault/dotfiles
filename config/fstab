@@ -12,9 +12,15 @@
 #
 
 # <fs>                                       <mountpoint>              <type>     <opts>                                                <dump/pass>
-# ESP
-UUID=BED8-D455                               /boot                     vfat       defaults                                              1 2
-# Swap
-UUID=85ed89ff-c39b-45bd-a446-69d22cf1adb7    none                      swap       defaults                                              0 0
-# Tmp
+# esp
+UUID=637B-054E                               /boot                     vfat       defaults                                              1 2
+# root
+UUID=e4bce81c-6314-4db5-b473-551d3f0c1670    /                         btrfs      rw,noatime,ssd,subvol=/                               0 2
+# home
+UUID=e4bce81c-6314-4db5-b473-551d3f0c1670    /home                     btrfs      rw,noatime,ssd,subvol=/home                           0 2
+# srv
+UUID=e4bce81c-6314-4db5-b473-551d3f0c1670    /srv                      btrfs      rw,noatime,ssd,subvol=/srv                            0 2
+# swap
+UUID=93afab98-f17a-405f-a460-e4eaa84e2b81    none                      swap       defaults                                              0 0
+# tmp
 tmpfs                                        /var/tmp/portage          tmpfs      size=12G,uid=portage,gid=portage,mode=775,noatime     0 0
