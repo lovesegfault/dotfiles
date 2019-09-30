@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 shopt -s nullglob globstar
-passmenu_path="$(readlink -f $0)"
+passmenu_path="$(readlink -f "${0}")"
 passmenu_fifo="/tmp/passmenu_fifo"
 passmenu_lock="/tmp/passmenu_lock"
 passmenu_icon="${HOME}/.config/gopass/gopass-logo-small.png"
@@ -28,7 +28,7 @@ function passmenu_window() {
     password_files=( "${password_files[@]%.gpg}" )
 
     #notify-send "Querying name"
-    name="$(printf '%s\n' ${password_files[@]} | sk --delimiter '/' --nth 2)"
+    name="$(printf '%s\n' "${password_files[@]}" | sk --delimiter '/' --nth 2)"
 
     #notify-send "Writeback ${name}"
     echo "${name}" > "${passmenu_fifo}"
