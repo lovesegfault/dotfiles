@@ -38,6 +38,7 @@ Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
 Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-surround'
 Plug 'uarun/vim-protobuf'
+Plug 'maximbaz/lightline-ale'
 call plug#end()
 
 " Settings
@@ -240,9 +241,34 @@ let g:ale_fixers = {
     \ 'rust':['remove_trailing_lines', 'trim_whitespace','rustfmt'],
     \ 'sh':['shfmt','remove_trailing_lines','trim_whitespace'],
     \ 'toml':['remove_trailing_lines', 'trim_whitespace'],
+    \ 'vim':['remove_trailing_lines', 'trim_whitespace'],
     \ 'xml':['remove_trailing_lines', 'trim_whitespace'],
 \ }
 " ---- itchyny/lightline.vim
 let g:lightline = {
     \ 'colorscheme': 'ayu',
+    \ 'active': {
+    \   'left': [
+    \       ['mode', 'paste'],
+    \       ['filename', 'modified']
+    \   ],
+    \   'right': [
+    \       ['lineinfo'],
+    \       ['percent'],
+    \       ['fileformat', 'fileencoding', 'filetype', 'readonly'],
+    \       ['linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok']
+    \   ]
+    \ },
+    \ 'component_expand': {
+    \   'linter_checking': 'lightline#ale#checking',
+    \   'linter_warnings': 'lightline#ale#warnings',
+    \   'linter_errors': 'lightline#ale#errors',
+    \   'linter_ok': 'lightline#ale#ok',
+    \ },
+    \ 'component_type': {
+    \   'linter_checking': 'left',
+    \   'linter_warnings': 'warning',
+    \   'linter_errors': 'error',
+    \   'linter_ok': 'left',
+    \ }
 \ }
