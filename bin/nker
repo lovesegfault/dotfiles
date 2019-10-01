@@ -350,7 +350,7 @@ function update_systemd_boot() {
 
 	create_boot_entry "${distro_name}" "${kernel_version}" "${entry_name}" "${logfile}"
 	update_boot_default "${entry_name}"
-    print_ok
+	print_ok
 }
 
 function verify_systemd_boot() {
