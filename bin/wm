@@ -30,12 +30,12 @@ export SDL_VIDEODRIVER=wayland
 export MOZ_ENABLE_WAYLAND=1
 
 #echo "Starting sway"
-cards="$(ls /dev/dri | rg card | awk 'NF{print $NF}')"
+cards="$(find /dev/dri -name "card*" | awk 'NF{print $NF}')"
 while read -r card; do
-    info="$(udevadm info -a /dev/dri/${card})"
+    info="$(udevadm info -a "/dev/dri/${card}")"
     if rg -q "i915" <<< "$info"; then
         export WLR_DRM_DEVICES="/dev/dri/${card}"
     fi
-done <<< $cards
+done <<< "${cards}"
 
 exec sway --my-next-gpu-wont-be-nvidia >> "${logfile}" 2>&1
