@@ -100,6 +100,7 @@ set ffs=unix,dos,mac
 set expandtab
 set smarttab
 set shiftwidth=4
+set tabstop=4
 " ---- Linebreak at 80 chars
 set lbr
 set tw=80
@@ -175,6 +176,7 @@ let g:deoplete#sources#clang#libclang_path = "/usr/lib/llvm/9/lib64/libclang.so"
 let g:deoplete#sources#clang#clang_header = "/usr/lib/llvm/9/include/clang"
 
 call deoplete#custom#source('tabnine', 'rank', 100)
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 " ---- luochen1990/rainbow
 let g:rainbow_active = 1
 " ---- lotabout/skim.vim
