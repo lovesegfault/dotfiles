@@ -3,36 +3,39 @@
 set -o nounset
 set -o pipefail
 
+BT_ID="70:26:05:0D:3E:C3"
+
+bt_cmd() {
+    echo "$1" | bluetoothctl
+}
+
 connected() {
-    status="$(echo 'info 70:26:05:0D:3E:C3' | bluetoothctl | rg Connected | cut -f 2 -d ' ')"
-    if [ $status = 'no' ]; then
+    local status
+    status="$(bt_cmd "info ${BT_ID}" | rg Connected | cut -f 2 -d ' ')"
+    if [ "${status}" = 'no' ]; then
         return 1
     else
         return 0
     fi
 }
 
-bt_cmd() {
-    echo "$1" | bluetoothctl
-}
-
-#if connected; then
-#    bt_cmd 'disconnect 70:26:05:0D:3E:C3'
-#    while connected; do
-#        sleep 0.2
-#    done
-#    sleep 2
-#fi
+if connected; then
+    bt_cmd "disconnect ${BT_ID}"
+    while connected; do
+        sleep 0.2
+    done
+    sleep 2
+fi
 
 sudo systemctl stop bluetooth.service
 sudo rmmod btusb
 sudo modprobe btusb
 sudo systemctl start bluetooth.service
-rfkill unblock bluetooth
+sudo rfkill unblock bluetooth
 sleep 1
-bt_cmd 'default-agent'
-bt_cmd 'power on'
-bt_cmd 'connect 70:26:05:0D:3E:C3'
+bt_cmd "default-agent"
+bt_cmd "power on"
+bt_cmd "connect ${BT_ID}"
 
 while ! connected; do
     sleep 0.2
