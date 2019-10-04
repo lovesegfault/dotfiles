@@ -224,7 +224,7 @@ let g:ale_linters = {
     \ 'cpp':['clangd', 'cppcheck', 'flawfinder'],
     \ 'ebuild':['shellcheck'],
     \ 'python': ['bandit', 'pylama', 'vulture'],
-    \ 'rust': ['rls'],
+    \ 'rust': ['cargo', 'rls'],
     \ 'text':['proselint', 'languagetool'],
 \ }
 let g:ale_fixers = {
