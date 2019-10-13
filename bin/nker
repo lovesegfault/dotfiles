@@ -287,12 +287,6 @@ function build_initrd() {
 	spinner
 }
 
-function clean_boot() {
-	progress "info" "Cleaning old files "
-	find "/boot" -maxdepth 1 -name \*.old -type f -delete
-	print_ok
-}
-
 function build_kernel_options() {
 	local root="root=UUID=e4bce81c-6314-4db5-b473-551d3f0c1670"
 	local rootfs="rootfstype=btrfs"
@@ -308,23 +302,22 @@ function build_kernel_options() {
 function create_boot_entry() {
 	local distro_name="$1"
 	local kernel_version="$2"
-	local entry_name="$3"
+    local revision="$3"
 	local logfile="$4"
 
+    revision="$([ -z "${revision}" ] && echo "" || echo "-${revision}")"
+    local entry_name="${distro_name}-${kernel_version}${revision}"
 	local entry_path="/boot/loader/entries/${entry_name}.conf"
 
 	tee "${entry_path}" >> "${logfile}" <<-EOF
-		title ENTRY_NAME_IN
-		linux /VMLINUZ_IN
+		title ${entry_name}
+		linux /vmlinuz-${kernel_version}-${distro_name}${revision}
 		initrd /intel-uc.img
-		initrd /INITRD_IN
-		options OPTIONS_IN
+		initrd /initramfs-${kernel_version}-${distro_name}${revision}.img
+        options $(build_kernel_options)
 	EOF
 
-	sed -i "s/ENTRY_NAME_IN/${entry_name}/g" "${entry_path}" || exit 1
-	sed -i "s/VMLINUZ_IN/vmlinuz-${kernel_version}-${distro_name}/g" "${entry_path}" || exit 1
-	sed -i "s/INITRD_IN/initramfs-${kernel_version}-${distro_name}.img/g" "${entry_path}" || exit 1
-	sed -i "s/OPTIONS_IN/$(build_kernel_options)/g" "${entry_path}" || exit 1
+    echo "${entry_name}"
 }
 
 function update_boot_default() {
@@ -340,15 +333,16 @@ function update_systemd_boot() {
 
 	local kernel_version
 	local distro_name
+    local revision
 	kernel_version="$(cut -f 2 -d '-' <<< "${kernel}")"
 	distro_name="$(cut -f 3 -d '-' <<< "${kernel}")"
-
-	local entry_name="${distro_name}-${kernel_version}"
+    revision="$(cut -f 4 -d '-' <<< "${kernel}")"
 
 	progress "info" "Updating systemd-boot"
 	bootctl update >> "${logfile}" 2>&1
 
-	create_boot_entry "${distro_name}" "${kernel_version}" "${entry_name}" "${logfile}"
+    local entry_name
+	entry_name="$(create_boot_entry "${distro_name}" "${kernel_version}" "${revision}" "${logfile}")"
 	update_boot_default "${entry_name}"
 	print_ok
 }
@@ -362,6 +356,12 @@ function verify_systemd_boot() {
 		progress "error" "CHECK BOOTCTL AND FIX\n"
 		exit 1
 	fi
+}
+
+function clean_boot() {
+	progress "info" "Cleaning old files "
+	find "/boot" -maxdepth 1 -name \*.old -type f -delete
+	print_ok
 }
 
 ##############################################################################
@@ -385,10 +385,10 @@ rebuild_modules "${logfile}"
 
 build_initrd "${kernel}" "${logfile}"
 
-clean_boot
-
 update_systemd_boot "${kernel}" "${logfile}"
 
 verify_systemd_boot
+
+clean_boot
 
 progress "header" "Done!\n"
