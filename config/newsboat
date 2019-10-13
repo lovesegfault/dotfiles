@@ -1,4 +1,5 @@
 auto-reload yes
+reload-threads 12
 reload-time 5
 browser "lynx %u"
 
