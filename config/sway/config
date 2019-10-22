@@ -17,7 +17,7 @@ set $right l
 set $term alacritty
 # Your preferred application launcher
 # Note: it's recommended that you pass the final command to sway
-set $menu $term -d 80 20 -t menu --class menu -e ~/bin/menu
+set $menu $term -d 80 20 -t menu --class menu -e ~/bin/sway-launcher-desktop.sh
 for_window [app_id="menu"] floating enable, border none
 set $passmenu ~/bin/passmenu
 for_window [app_id="passmenu"] floating enable, border none
