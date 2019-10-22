@@ -5,7 +5,7 @@ if [ -z $IN_NIX_SHELL ];then
     PATH="$HOME/bin:$PATH" # Self-compiled
     PATH="$PATH:$HOME/.local/share/npm/bin" # NPM trash
     PATH="$PATH:$HOME/.local/bin" # Pip
-    PATH="$PATH:/opt/xilinx/Vivado/2018.3/bin"
+    PATH="$PATH:/opt/xilinx/Vivado/2019.1/bin"
     PATH="$PATH:/sbin:/usr/sbin"
     export PATH
 
