@@ -165,9 +165,6 @@ font:
   # effect.
   use_thin_strokes: true
 
-# If `true`, bold text is drawn using the bright color variants.
-draw_bold_text_with_bright_colors: true
-
 # Colors (Ayu Dark)
 colors:
   # Default colors
@@ -196,6 +193,8 @@ colors:
     magenta: '0xFFEE99'
     cyan: '0x95E6CB'
     white: '0xFFFFFF'
+
+draw_bold_text_with_bright_colors: false
 
 # Visual Bell
 #
