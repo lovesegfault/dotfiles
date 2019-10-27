@@ -62,7 +62,6 @@ zplug "hlissner/zsh-autopair", defer:2
 zplug "hcgraf/zsh-sudo"
 zplug "chisui/zsh-nix-shell"
 zplug "spwhitt/nix-zsh-completions", defer:2
-#zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
 zplug "mafredri/zsh-async", from:github
 zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme
 zplug load
