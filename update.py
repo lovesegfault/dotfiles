@@ -109,14 +109,16 @@ config_mapping = {
 # Mapping scripts
 bin_mapping = {
     "aim": bin_path() / "aim",
-    "menu": bin_path() / "menu",
     "bimp": bin_path() / "bimp",
     "checkiommu": bin_path() / "checkiommu",
     "fixhd": bin_path() / "fixhd",
     "fuzzylock": bin_path() / "fuzzylock",
+    "menu": bin_path() / "menu",
     "nker": bin_path() / "nker",
+    "part": bin_path() / "part",
     "passmenu": bin_path() / "passmenu",
     "prtsc": bin_path() / "prtsc",
+    "sway-launcher": bin_path() / "sway-launcher",
     "testfonts": bin_path() / "testfonts",
     "wm": bin_path() / "wm",
 }
