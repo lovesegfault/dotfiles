@@ -1,0 +1,290 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+LOGFILE="/tmp/part.log"
+
+function print_help() {
+	echo "USAGE: part.sh [DISK] [DISK] ...."
+	echo ""
+	echo "Available disks:"
+	ls -l /dev/disk/by-id/
+}
+
+function cprintf() {
+	# This requires the following arguments
+	# $color $string
+	if [ "$#" -ne 2 ]; then
+		progress "error" "INVALID USAGE OF 'color_print'\n"
+		progress "error" "PLEASE REPORT THIS TO A MAINTAINER\n"
+		exit 1
+	fi
+	local color
+	case "$1" in
+		black)
+			color=0
+			;;
+		red)
+			color=1
+			;;
+		green)
+			color=2
+			;;
+		yellow)
+			color=3
+			;;
+		blue)
+			color=4
+			;;
+		magenta)
+			color=5
+			;;
+		cyan)
+			color=6
+			;;
+		white)
+			color=7
+			;;
+		*)
+			progress "error" "INVALID COLOR '$1' PASSED TO 'cprintf'\n"
+			progress "error" "PLEASE REPORT THIS TO A MAINTAINER\n"
+			exit 1
+	esac
+	printf "%s$2%s" "$(tput setaf $color)" "$(tput sgr 0)"
+}
+
+function progress() {
+	# This requires the following arguments
+	# $type $message
+	# $type is one of: header; info; log; error
+	local scolor
+	local mstart
+	local mcolor
+	local mtype
+	case "$1" in
+		header)
+			scolor="green"
+			mstart="$(tput bold)>> $(tput sgr 0)"
+			mcolor="white"
+			mtype="$(tput bold)"
+			;;
+		info)
+			scolor="cyan"
+			mstart=">>>> "
+			mcolor="white"
+			mtype=""
+			;;
+		log)
+			scolor="cyan"
+			mstart=">>>>>> "
+			mcolor="blue"
+			mtype="$(tput dim)"
+			;;
+		error)
+			scolor="red"
+			mstart="$(tput bold)>>>> $(tput sgr 0)"
+			mcolor="red"
+			mtype="$(tput bold)$(tput smul)"
+			;;
+		*)
+			progress "error" "INVALID TYPE '$1' PASSED TO 'progress'\n"
+			progress "error" "PLEASE REPORT THIS TO A MAINTAINER\n"
+			exit 1
+	esac
+	cprintf "$scolor" "$mstart"
+	cprintf "$mcolor" "$mtype$2$(tput sgr 0)"
+}
+
+function print_ok() {
+	printf " %s✓%s\n" "$(tput setaf 2)$(tput bold)" "$(tput sgr 0)"
+}
+
+spinner() {
+	local pid=$!
+	local delay=0.2
+	local sp="|/-\\"
+	local n=${#sp}
+	local i=0
+	printf '  '
+	while ps a | awk '{print $1}' | grep -q $pid; do
+		printf "\b%s" "${sp:i++%n:1}"
+		sleep $delay
+	done
+	printf "\b\b"
+}
+
+function ensure_root() {
+	if [ "$(id -u)" != "0" ]; then
+		# If not root complain and exit.
+		progress "error"  "Please run genpart as root\n"
+		exit 1
+	fi
+}
+
+function ensure_args() {
+	if [ "$#" -lt 1 ]; then
+		print_help
+		exit 1
+	fi
+}
+
+function validate_disks() {
+	local disks=( "${@}" )
+	for disk in "${disks[@]}"; do
+		local info
+		if [ ! -e "${disk}" ]; then
+			progress error "${disk} does not exist"
+			exit 1
+		fi
+
+		info="$(udevadm info "${disk}")"
+		if [[ ${info} != *"DEVTYPE=disk"* ]]; then
+			progress error "${disk} is not a valid disk, check udevadm"
+			exit 1
+		fi
+	done
+}
+
+function clear_superblocks() {
+	local disks=( "${@}" )
+
+	progress header "Clearing superblocks\n"
+	for disk in "${disks[@]}"; do
+		progress info "${disk}"
+		mdadm --zero-superblock --force "${disk}" >> "${LOGFILE}" 2>&1 & spinner
+		print_ok
+	done
+}
+
+function clear_partitions() {
+	local disks=( "${@}" )
+
+	progress header "Clearing partitions\n"
+	for disk in "${disks[@]}"; do
+		progress info "${disk}"
+		sgdisk --zap-all "${disk}" >> "${LOGFILE}" 2>&1 & spinner
+		print_ok
+	done
+}
+
+function create_partitions() {
+	local disks=( "${@}" )
+
+	progress header "Creating partitions\n"
+	for disk in "${disks[@]}"; do
+		progress info "${disk}"
+		sgdisk -n1:1M:+512M -t1:EF00 "${disk}" >> "${LOGFILE}" 2>&1 & spinner
+		sgdisk -n2:0:0 -t2:BF01 "${disk}" >> "${LOGFILE}" 2>&1 & spinner
+		print_ok
+	done
+}
+
+function refresh_partitions() {
+	local disks=( "${@}" )
+	for disk in "${disks[@]}"; do
+		partprobe "${disk}"
+	done
+}
+
+function create_boot() {
+	local disks=( "${@}" )
+	local boot_partitions=( "${disks[@]/%/1}" )
+
+	progress header "Formatting boot partitions\n"
+	for part in "${boot_partitions[@]}"; do
+		progress info "${part}"
+		mkfs.vfat "${part}" >> "${LOGFILE}" 2>&1 & spinner
+		print_ok
+	done
+	progress info "Only ${boot_partitions[0]} will be used as esp\n"
+}
+
+function create_zpool() {
+	local pool_name="${1}"
+	local disks=( "${@:2}" )
+	local data_partitions=( "${disks[@]/%/2}" )
+
+	progress header "Creating zpool\n"
+	progress info "Name: ${pool_name}\n"
+	progress info "Type: raidz\n"
+	progress info "Disks: ${data_partitions[*]}\n"
+
+	progress info "Creating"
+	zpool create \
+		-O acltype=posixacl \
+		-O atime=off \
+		-O mountpoint=none \
+		-O xattr=sa \
+		-o altroot=/mnt \
+		-o ashift=12 \
+		"${pool_name}" \
+		raidz \
+		"${data_partitions[@]}" >> "${LOGFILE}" 2>&1 & spinner
+	print_ok
+}
+
+function create_zfs() {
+	local pool_name="${1}"
+	progress header "Partitioning ${pool_name}\n"
+
+	progress info "${pool_name}/root"
+	zfs create -o mountpoint=none "${pool_name}/root" >> "${LOGFILE}" 2>&1 & spinner
+	print_ok
+
+	progress info "${pool_name}/root/nixos"
+	zfs create -o mountpoint=legacy "${pool_name}/root/nixos"
+	print_ok
+
+	progress info "${pool_name}/home"
+	zfs create -o mountpoint=legacy -o compression=lz4 "${pool_name}/home"
+	print_ok
+}
+
+function mount_filesystems() {
+	local mount_point="${1}"
+	local pool_name="${2}"
+	local disks=( "${@:3}" )
+	local boot_partition="${disks[0]/%/1}"
+
+	progress header "Mounting filesystems to ${mount_point}\n"
+
+	progress info "${pool_name}/root/nixos -> ${mount_point}\n"
+	mount -t zfs "${pool_name}/root/nixos" "${mount_point}"
+
+	mkdir "${mount_point}/home"
+	mkdir "${mount_point}/boot"
+
+	progress info "${pool_name}/home -> ${mount_point}/home\n"
+	mount -t zfs "${pool_name}/home" "${mount_point}/home"
+
+	progress info "${boot_partition} -> ${mount_point}/boot\n"
+	mount "${boot_partition}" "${mount_point}/boot"
+}
+
+function main () {
+	local disks=( "${@}" )
+	readarray -t disks < <(printf '%s\0' "${disks[@]}" | sort -z | xargs -0n1)
+	progress header "Generating patitions for ${disks[*]}\n"
+
+	ensure_root
+	ensure_args "$@"
+	validate_disks "${disks[@]}"
+
+	refresh_partitions "${disks[@]}"
+	clear_superblocks "${disks[@]}"
+	clear_partitions "${disks[@]}"
+	create_partitions "${disks[@]}"
+	refresh_partitions "${disks[@]}"
+
+	local pool_name="rpool"
+	local mount_point="/mnt"
+	create_boot "${disks[@]}"
+	create_zpool "${pool_name}" "${disks[@]}"
+	create_zfs "${pool_name}"
+	mount_filesystems "${mount_point}" "${pool_name}" "${disks[@]}"
+}
+
+trap 'kill $(jobs -p) >> ${LOGFILE} 2>&1' EXIT
+main "${@}"
